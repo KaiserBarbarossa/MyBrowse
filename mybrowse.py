@@ -8,7 +8,7 @@ import os
 
 browser_id = 'MyBrowse 0.1'
 
-conf_dir = '~/.config/mybrowse/'
+conf_dir = f"{os.path.expanduser('~')}/.config/mybrowse/"
 
 if not os.path.exists(conf_dir):
 	try:
