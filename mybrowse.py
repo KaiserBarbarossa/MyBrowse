@@ -20,10 +20,11 @@ if not os.path.exists(conf_dir):
 
 config = configparser.ConfigParser()
 config.read(conf_dir + 'mybrowse.cfg')
+startpage = config['General']['home']
 if len(sys.argv) > 1:
-	startpage = sys.argv[1]
+	starturl = sys.argv[1]
 else:
-	startpage = config['General']['home']
+	starturl = startpage
 
 class Browser(Gtk.Window):
     def __init__(self):
@@ -55,7 +56,7 @@ class Browser(Gtk.Window):
         self.home.add(self.home_arrow)
         self.menu.add(self.home)
         self.addressbar = Gtk.Entry()
-        self.addressbar.set_text(startpage)
+        self.addressbar.set_text(starturl)
         self.addressbar.set_width_chars(75)
         self.menu.add(self.addressbar)
 
@@ -71,7 +72,7 @@ class Browser(Gtk.Window):
 
         self.vbox.pack_start(self.sw, True, True, 0)
         self.add(self.vbox)
-        self.view.load_uri(startpage)
+        self.view.load_uri(starturl)
 
 
     def change_url(self, widget):
