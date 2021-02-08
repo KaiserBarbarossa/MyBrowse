@@ -73,11 +73,20 @@ class Browser(Gtk.Window):
         self.vbox.pack_start(self.sw, True, True, 0)
         self.add(self.vbox)
         self.view.load_uri(starturl)
-
+        self.view.connect("notify::uri", self.change_uri)
+        self.view.connect("notify::title", self.change_title)
 
     def change_url(self, widget):
         url = self.addressbar.get_text()
         self.view.load_uri(url)
+
+    def change_title(self, widget, data, *arg):
+	    title = widget.get_title()
+	    self.set_title(title + ' - MyBrowse')
+
+    def change_uri(self, widget, data, *arg):
+	    uri = widget.get_uri()
+	    self.addressbar.set_text(uri)
 
     def go_back(self, widget):
         self.view.go_back()
