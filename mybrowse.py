@@ -5,6 +5,7 @@ gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, WebKit2
 import configparser
 import os
+import sys
 
 browser_id = 'MyBrowse 0.1'
 
@@ -19,7 +20,10 @@ if not os.path.exists(conf_dir):
 
 config = configparser.ConfigParser()
 config.read(conf_dir + 'mybrowse.cfg')
-startpage = config['General']['home']
+if len(sys.argv) > 1:
+	startpage = sys.argv[1]
+else:
+	startpage = config['General']['home']
 
 class Browser(Gtk.Window):
     def __init__(self):
@@ -31,7 +35,7 @@ class Browser(Gtk.Window):
         self.vbox.expand = True
         self.vbox.set_spacing(10)
         #self.set_icon_from_file(conf_dir + 'mybrowse.png')
-              
+
         self.menu = Gtk.Box(orientation=Gtk.STYLE_CLASS_HORIZONTAL)
         self.menu.expand = False
         self.back = Gtk.Button()
@@ -82,11 +86,11 @@ class Browser(Gtk.Window):
 
     def go_reload(self, widget):
         self.view.reload()
-                        
+
     def go_home(self, widget):
         self.addressbar.set_text(startpage)
         self.view.load_uri(startpage)
-        
+
 
 if __name__ == "__main__":
     browser = Browser()
