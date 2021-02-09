@@ -60,8 +60,11 @@ class Browser(Gtk.Window):
         self.addressbar.set_text(starturl)
         self.addressbar.set_width_chars(75)
         self.menu.add(self.addressbar)
+        self.bookmarker = Gtk.Button()
+        self.bookmarker_symbol = Gtk.Image.new_from_icon_name('bookmark-new', Gtk.IconSize.SMALL_TOOLBAR)
+        self.bookmarker.add(self.bookmarker_symbol)
+        self.menu.add(self.bookmarker)
         self.searchbar = Gtk.SearchEntry()
-        self.searchbar.connect("activate", self.search)
         self.menu.add(self.searchbar)
 
         self.addressbar.connect("activate", self.change_url)
@@ -69,6 +72,8 @@ class Browser(Gtk.Window):
         self.forward.connect("clicked", self.go_forward)
         self.reload.connect("clicked", self.go_reload)
         self.home.connect("clicked", self.go_home)
+        self.searchbar.connect("activate", self.search)
+        self.bookmarker.connect("clicked", self.set_bookmark)
         self.vbox.add(self.menu)
 
         self.sw = Gtk.ScrolledWindow()
@@ -110,6 +115,12 @@ class Browser(Gtk.Window):
     def search(self, searchbar):
         searchstring = self.searchbar.get_text()
         self.view.load_uri(searchengine + searchstring)
+
+    def set_bookmark(self, widget):
+        url = self.addressbar.get_text()
+        title = self.view.get_title()
+        bm_file =  open(conf_dir + 'bookmarks.html', 'a')
+        bm_file.write('<a href="' + url + '">' + title + '</a><br>\r\n')
 
 
 if __name__ == "__main__":
