@@ -89,6 +89,8 @@ class Browser(Gtk.Window):
         url = self.addressbar.get_text()
         if not ":" in url:
            url = "https://" + url
+        elif url == "about:bookmarks":
+           url = 'file://' + conf_dir + 'bookmarks.html'
         self.view.load_uri(url)
 
     def change_title(self, widget, data, *arg):
@@ -121,6 +123,7 @@ class Browser(Gtk.Window):
         title = self.view.get_title()
         bm_file =  open(conf_dir + 'bookmarks.html', 'a')
         bm_file.write('<a href="' + url + '">' + title + '</a><br>\r\n')
+        bm_file.close()
 
 
 if __name__ == "__main__":
