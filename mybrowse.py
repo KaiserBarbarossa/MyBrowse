@@ -12,19 +12,19 @@ browser_id = 'MyBrowse 0.1'
 conf_dir = f"{os.path.expanduser('~')}/.config/mybrowse/"
 
 if not os.path.exists(conf_dir):
-	try:
-		os.makedirs(conf_dir)
-	except OSError as e:
-		print(e)
-		pass
+        try:
+                os.makedirs(conf_dir)
+        except OSError as e:
+                print(e)
+                pass
 
 config = configparser.ConfigParser()
 config.read(conf_dir + 'mybrowse.cfg')
 startpage = config['General']['home']
 if len(sys.argv) > 1:
-	starturl = sys.argv[1]
+        starturl = sys.argv[1]
 else:
-	starturl = startpage
+        starturl = startpage
 
 class Browser(Gtk.Window):
     def __init__(self):
@@ -59,6 +59,9 @@ class Browser(Gtk.Window):
         self.addressbar.set_text(starturl)
         self.addressbar.set_width_chars(75)
         self.menu.add(self.addressbar)
+        self.searchbar = Gtk.SearchEntry()
+        self.searchbar.connect("activate", self.search)
+        self.menu.add(self.searchbar)
 
         self.addressbar.connect("activate", self.change_url)
         self.back.connect("clicked", self.go_back)
@@ -83,12 +86,12 @@ class Browser(Gtk.Window):
         self.view.load_uri(url)
 
     def change_title(self, widget, data, *arg):
-	    title = widget.get_title()
-	    self.set_title(title + ' - MyBrowse')
+            title = widget.get_title()
+            self.set_title(title + ' - MyBrowse')
 
     def change_uri(self, widget, data, *arg):
-	    uri = widget.get_uri()
-	    self.addressbar.set_text(uri)
+            uri = widget.get_uri()
+            self.addressbar.set_text(uri)
 
     def go_back(self, widget):
         self.view.go_back()
@@ -102,6 +105,10 @@ class Browser(Gtk.Window):
     def go_home(self, widget):
         self.addressbar.set_text(startpage)
         self.view.load_uri(startpage)
+
+    def search(self, searchbar):
+        searchstring = self.searchbar.get_text()
+        self.view.load_uri('https://duckduckgo.com/?q=' + searchstring)
 
 
 if __name__ == "__main__":
