@@ -78,6 +78,8 @@ class Browser(Gtk.Window):
 
     def change_url(self, widget):
         url = self.addressbar.get_text()
+        if not ":" in url:
+           url = "https://" + url
         self.view.load_uri(url)
 
     def change_title(self, widget, data, *arg):
