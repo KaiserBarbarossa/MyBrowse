@@ -20,6 +20,7 @@ if not os.path.exists(conf_dir):
 
 config = configparser.ConfigParser()
 config.read(conf_dir + 'mybrowse.cfg')
+searchengine = config['General']['search']
 startpage = config['General']['home']
 if len(sys.argv) > 1:
         starturl = sys.argv[1]
@@ -108,7 +109,7 @@ class Browser(Gtk.Window):
 
     def search(self, searchbar):
         searchstring = self.searchbar.get_text()
-        self.view.load_uri('https://duckduckgo.com/?q=' + searchstring)
+        self.view.load_uri(searchengine + searchstring)
 
 
 if __name__ == "__main__":
