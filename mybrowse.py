@@ -85,6 +85,10 @@ class Browser(Gtk.Window):
         self.view.connect("notify::uri", self.change_uri)
         self.view.connect("notify::title", self.change_title)
 
+        settings = self.view.get_settings()
+        settings.set_property('user-agent', config['Browser']['user-agent'])
+        settings.set_property('enable-developer-extras', config['Browser']['firebug'])
+
     def change_url(self, widget):
         url = self.addressbar.get_text()
         if not ":" in url:
@@ -120,7 +124,6 @@ class Browser(Gtk.Window):
 
     def set_bookmark(self, widget):
         url = self.addressbar.get_text()
-        title = self.view.get_title()
         bm_file =  open(conf_dir + 'bookmarks.html', 'a')
         bm_file.write('<a href="' + url + '">' + title + '</a><br>\r\n')
         bm_file.close()
