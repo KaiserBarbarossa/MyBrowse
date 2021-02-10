@@ -1,4 +1,11 @@
-mybrowse (0.2-0ubuntu1) unstable; urgency=medium
+mybrowse (0.2.1-0ubuntu1) focal; urgency=low
+
+   * Search engine defined in configuration file
+   * Aad bookmarks
+
+ -- tuxifreund <kaiser.barbarossa@yandex.com>  Wed, 10 Feb 2021 22:33:07 +0100
+
+mybrowse (0.2-0ubuntu1) focal; urgency=medium
 
   * Initial release
   * Old releases can be found on GitHub
