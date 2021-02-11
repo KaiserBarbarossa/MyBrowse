@@ -11,12 +11,30 @@ browser_id = 'MyBrowse 2.2'
 
 conf_dir = f"{Path.home()}/.config/mybrowse/"
 
-if not Path.exists(conf_dir):
+p = Path(conf_dir)
+
+if not p.is_dir():
         try:
-                Path.mkdir(conf_dir)
+                p.mkdir()
         except OSError as e:
                 print(e)
                 pass
+
+conf_file = f"{p}/mybrowse.cfg"
+
+if not Path(conf_file).exists():
+        print('No configuration found')
+        with open(conf_file, 'w') as f:
+                f.write('''
+[General]
+home = https://lite.duckduckgo.com
+search = https://duckduckgo.com/?q=
+
+[Browser]
+user-agent = MyBrowse 0.2
+firebug = True
+''')
+                f.close()
 
 config = configparser.ConfigParser()
 config.read(conf_dir + 'mybrowse.cfg')
