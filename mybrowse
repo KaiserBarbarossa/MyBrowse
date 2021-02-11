@@ -37,7 +37,7 @@ firebug = True
                 f.close()
 
 config = configparser.ConfigParser()
-config.read(conf_dir + 'mybrowse.cfg')
+config.read(conf_file)
 searchengine = config['General']['search']
 startpage = config['General']['home']
 if len(sys.argv) > 1:
