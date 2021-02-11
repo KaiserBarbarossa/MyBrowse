@@ -6,14 +6,15 @@ from gi.repository import Gtk, WebKit2
 import configparser
 import os
 import sys
+from pathlib import Path
 
-browser_id = 'MyBrowse 2.1'
+browser_id = 'MyBrowse 2.2'
 
-conf_dir = f"{os.path.expanduser('~')}/.config/mybrowse/"
+conf_dir = f"{Path.home()}/.config/mybrowse/"
 
-if not os.path.exists(conf_dir):
+if not Path.exists(conf_dir):
         try:
-                os.makedirs(conf_dir)
+                Path.mkdir(conf_dir)
         except OSError as e:
                 print(e)
                 pass
