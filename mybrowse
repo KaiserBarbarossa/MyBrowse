@@ -158,6 +158,7 @@ class Browser(Gtk.Window):
 
     def set_bookmark(self, widget):
         url = self.addressbar.get_text()
+        title = self.view.get_title()
         bm_file =  open(conf_dir + 'bookmarks.html', 'a')
         bm_file.write('<a href="' + url + '">' + title + '</a><br>\r\n')
         bm_file.close()
