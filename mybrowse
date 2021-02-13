@@ -23,8 +23,6 @@ import configparser
 import sys
 from pathlib import Path
 
-browser_id = 'MyBrowse 0.2.2'
-
 conf_dir = f"{Path.home()}/.config/mybrowse/"
 
 p = Path(conf_dir)
@@ -47,7 +45,7 @@ home = https://lite.duckduckgo.com
 search = https://duckduckgo.com/?q=
 
 [Browser]
-user-agent = MyBrowse 0.2.2
+user-agent = Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:85.0) Gecko/20100101 Firefox/85.0
 firebug = True
 ''')
                 f.close()
