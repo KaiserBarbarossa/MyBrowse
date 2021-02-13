@@ -70,7 +70,7 @@ class Browser(Gtk.Window):
         self.vbox = Gtk.Box(orientation=Gtk.STYLE_CLASS_VERTICAL)
         self.vbox.expand = True
         self.vbox.set_spacing(10)
-        #self.set_icon_from_file(conf_dir + 'mybrowse.png')
+        self.set_icon_name('browser')
 
         self.menu = Gtk.Box(orientation=Gtk.STYLE_CLASS_HORIZONTAL)
         self.menu.expand = False
