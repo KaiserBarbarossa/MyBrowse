@@ -88,18 +88,13 @@ class Browser(Gtk.Window):
         self.home_arrow = Gtk.Image.new_from_icon_name('go-home', Gtk.IconSize.SMALL_TOOLBAR)
         self.home.add(self.home_arrow)
         self.menu.add(self.home)
-        self.addressbar = Gtk.Entry()
-        self.addressbar.set_text(starturl)
-        self.addressbar.set_width_chars(75)
-        self.menu.add(self.addressbar)
         self.bookmarker = Gtk.Button()
         self.bookmarker_symbol = Gtk.Image.new_from_icon_name('bookmark-new', Gtk.IconSize.SMALL_TOOLBAR)
         self.bookmarker.add(self.bookmarker_symbol)
         self.menu.add(self.bookmarker)
         self.searchbar = Gtk.SearchEntry()
         self.menu.add(self.searchbar)
-
-        self.addressbar.connect("activate", self.change_url)
+        
         self.back.connect("clicked", self.go_back)
         self.forward.connect("clicked", self.go_forward)
         self.reload.connect("clicked", self.go_reload)
@@ -107,6 +102,13 @@ class Browser(Gtk.Window):
         self.searchbar.connect("activate", self.search)
         self.bookmarker.connect("clicked", self.set_bookmark)
         self.vbox.add(self.menu)
+
+        self.addressbar = Gtk.Entry()
+        self.addressbar.set_text(starturl)
+        self.vbox.add(self.addressbar)
+        
+        self.addressbar.connect("activate", self.change_url)
+
 
         self.sw = Gtk.ScrolledWindow()
         self.sw.add(self.view)
