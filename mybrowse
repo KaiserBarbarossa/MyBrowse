@@ -135,7 +135,10 @@ class Browser(Gtk.Window):
 
     def change_title(self, widget, data, *arg):
         title = widget.get_title()
-        self.set_title(title + ' - MyBrowse')
+        if title == '':
+                self.set_title('MyBrowse')
+        else:
+                self.set_title(title + ' - MyBrowse')
 
     def change_uri(self, widget, data, *arg):
         uri = widget.get_uri()
