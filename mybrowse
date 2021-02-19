@@ -127,11 +127,15 @@ class Browser(Gtk.Window):
 
     def change_url(self, widget):
         url = self.addressbar.get_text()
-        if not ":" in url:
-           url = "https://" + url
-        elif url == "about:bookmarks":
-           url = 'file://' + conf_dir + 'bookmarks.html'
-        self.view.load_uri(url)
+        if not url.startswith(':'):
+           if not ":" in url:
+              url = "https://" + url
+           elif url == "about:bookmarks":
+              url = 'file://' + conf_dir + 'bookmarks.html'
+           self.view.load_uri(url)
+        else:
+           if url == ':report':
+                self.view.load_uri('https://github.com/KaiserBarbarossa/MyBrowse/issues/new')
 
     def change_title(self, widget, data, *arg):
         title = widget.get_title()
