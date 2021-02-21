@@ -1,0 +1,14 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Exec=mybrowse %u
+Icon=web-browser
+StartupNotify=true
+Terminal=false
+Categories=Network;WebBrowser;GTK;
+MimeType=text/html;text/xml;application/xhtml+xml;application/xml;image/gif;image/jpeg;image/png;x-scheme-handler/http;x-scheme-handler/https;
+Name=MyBrowse
+Comment=A fast WebKit-based web browser
+Comment[de]=Ein schneller WebKit-Browser
+GenericName=Web Browser
+GenericName[de]=Webbrowser
