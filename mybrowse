@@ -136,6 +136,8 @@ class Browser(Gtk.Window):
         else:
            if url == ':report':
                 self.view.load_uri('https://github.com/KaiserBarbarossa/MyBrowse/issues/new')
+           elif url == ':home':
+                self.view.load_uri(startpage)
 
     def change_title(self, widget, data, *arg):
         title = widget.get_title()
