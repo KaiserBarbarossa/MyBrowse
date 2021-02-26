@@ -142,6 +142,22 @@ class Browser(Gtk.Window):
                 self.view.load_uri('https://github.com/KaiserBarbarossa/MyBrowse/issues/new')
            elif url == ':home':
                 self.view.load_uri(startpage)
+           elif url == ':back':
+                self.view.go_back()
+           elif url == ':forward':
+                self.view.go_forward()
+           elif url == ':undo':
+                self.view.go_back()
+           elif url == ':u':
+                self.view.go_back()
+           elif url == ':redo':
+                self.view.go_forward()
+           elif url == ':r':
+                self.view.go_forward()
+           elif url == ':reload':
+                self.view.reload()
+           elif url == ':rl':
+                self.view.reload()
 
     def change_title(self, widget, data, *arg):
         title = widget.get_title()
