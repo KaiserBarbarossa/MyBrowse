@@ -193,6 +193,9 @@ class Browser(Gtk.Window):
         if (event.keyval == Gdk.keyval_from_name('d') and
             event.state == Gdk.ModifierType.CONTROL_MASK):
                 self.set_bookmark()
+        if (event.keyval == Gdk.keyval_from_name('r') and
+            event.state == Gdk.ModifierType.CONTROL_MASK):
+                self.view.reload()
 
 if __name__ == "__main__":
     browser = Browser()
