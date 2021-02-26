@@ -149,6 +149,9 @@ class Browser(Gtk.Window):
     def change_uri(self, widget, data, *arg):
         uri = widget.get_uri()
         self.addressbar.set_text(uri)
+        history = open(conf_dir + 'history', 'a')
+        history.write(uri + '\r\n')
+        history.close()
 
     def go_back(self, widget):
         self.view.go_back()
