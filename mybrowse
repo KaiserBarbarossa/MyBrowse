@@ -134,6 +134,8 @@ class Browser(Gtk.Window):
               url = "https://" + url
            elif url == "about:bookmarks":
               url = 'file://' + conf_dir + 'bookmarks.html'
+           elif url == "about:history":
+              url = 'file://' + conf_dir + 'history'
            self.view.load_uri(url)
         else:
            if url == ':report':
