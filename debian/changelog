@@ -1,3 +1,18 @@
+mybrowse (0.3-0ubuntu1) groovy; urgency=medium
+
+   * Use Firefox’ user-agent as default
+   * progressbar in addressbar
+   * addressbar ad commandbar to go back, go forward, reload, go home and report bugs
+   * starter (MyBrowse can be found in a application menu at "Internet" -> "MyBrowse")
+   * keybindings
+   * history
+   * maximize window
+   * show url in addressbar on hover
+   * use system’s browser icon
+   * Fix bookmarking error because "title" didn’t exist
+
+ -- tuxifreund <kaiser.barbarossa@yandex.com>  Fri, 26 Feb 2021 15:23:40 +0100
+
 mybrowse (0.2.2-0ubuntu1) focal; urgency=medium
 
    * Use Pathlib instead of os
