@@ -190,7 +190,7 @@ class Browser(Gtk.Window):
         self.addressbar.set_progress_fraction(amount)
 
     def keybinding(self, widget, event):
-        if (event.keyval == Gdk.keyval_from_name('b') and
+        if (event.keyval == Gdk.keyval_from_name('d') and
             event.state == Gdk.ModifierType.CONTROL_MASK):
                 self.set_bookmark()
 
