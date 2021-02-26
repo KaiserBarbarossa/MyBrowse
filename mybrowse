@@ -172,7 +172,7 @@ class Browser(Gtk.Window):
         searchstring = self.searchbar.get_text()
         self.view.load_uri(searchengine + searchstring)
 
-    def set_bookmark(self):
+    def set_bookmark(self, widget):
         url = self.addressbar.get_text()
         title = self.view.get_title()
         bm_file =  open(conf_dir + 'bookmarks.html', 'a')
@@ -192,7 +192,7 @@ class Browser(Gtk.Window):
     def keybinding(self, widget, event):
         if (event.keyval == Gdk.keyval_from_name('d') and
             event.state == Gdk.ModifierType.CONTROL_MASK):
-                self.set_bookmark()
+                self.set_bookmark(self.view)
         if (event.keyval == Gdk.keyval_from_name('r') and
             event.state == Gdk.ModifierType.CONTROL_MASK):
                 self.view.reload()
