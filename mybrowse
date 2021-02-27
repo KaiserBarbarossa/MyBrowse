@@ -131,7 +131,10 @@ class Browser(Gtk.Window):
         url = self.addressbar.get_text()
         if not url.startswith(':'):
            if not ":" in url:
-              url = "https://" + url
+              if url.startswith('/'):
+                url = "file://" + url
+              else:
+                url = "https://" + url
            elif url == "about:bookmarks":
               url = 'file://' + conf_dir + 'bookmarks.html'
            elif url == "about:history":
