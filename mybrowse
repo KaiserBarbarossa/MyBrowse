@@ -48,6 +48,7 @@ search = https://duckduckgo.com/?q=
 [Browser]
 user-agent = Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:85.0) Gecko/20100101 Firefox/85.0
 firebug = True
+webgl = True
 ''')
                 f.close()
 
@@ -126,6 +127,7 @@ class Browser(Gtk.Window):
         settings = self.view.get_settings()
         settings.set_property('user-agent', config['Browser']['user-agent'])
         settings.set_property('enable-developer-extras', config['Browser']['firebug'])
+        settings.set_property('enable-webgl', config['Browser']['webgl'])
 
     def change_url(self, widget):
         url = self.addressbar.get_text()
