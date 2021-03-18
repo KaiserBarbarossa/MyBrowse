@@ -125,7 +125,14 @@ class Browser(Gtk.Window):
         self.connect("key-press-event", self.keybinding)
 
         settings = self.view.get_settings()
-        settings.set_property('user-agent', config['Browser']['user-agent'])
+        try:
+             settings.set_property('user-agent', config['Browser']['user-agent'])
+        except KeyError:
+             settings.set_property('user-agent', 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:85.0) Gecko/20100101 Firefox/85.0')
+             config['Browser']['user-agent'] = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:85.0) Gecko/20100101 Firefox/85.0'
+             print('User-Agent value not set. Use fallback value\r')
+             with open (conf_file, 'w') as configfile:
+                     config.write(configfile)
         settings.set_property('enable-developer-extras', config['Browser']['firebug'])
         settings.set_property('enable-webgl', config['Browser']['webgl'])
 
