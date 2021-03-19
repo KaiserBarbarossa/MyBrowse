@@ -133,8 +133,22 @@ class Browser(Gtk.Window):
              print('User-Agent value not set. Use fallback value\r')
              with open (conf_file, 'w') as configfile:
                      config.write(configfile)
-        settings.set_property('enable-developer-extras', config['Browser']['firebug'])
-        settings.set_property('enable-webgl', config['Browser']['webgl'])
+        try:
+             settings.set_property('enable-developer-extras', config['Browser']['firebug'])
+        except KeyError:
+             settings.set_property('enable-developer-extras', 'True')
+             print('Firebug value not set. Use fallback value\r')
+             config['Browser']['firebug'] = 'True'
+             with open(conf_file, 'w') as configfile:
+                     config.write(configfile)
+        try:
+            settings.set_property('enable-webgl', config['Browser']['webgl'])
+        except KeyError:
+            settings.set_property('enable-webgl', 'True')
+            print('WebGL setting not set. Use fallback value\r')
+            config['Browser']['webgl'] = 'True'
+            with open(conf_file, 'w') as configfile:
+                    config.write(configfile)
 
     def change_url(self, widget):
         url = self.addressbar.get_text()
