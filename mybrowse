@@ -221,6 +221,10 @@ class Browser(Gtk.ApplicationWindow):
         self.bookmarker.connect("clicked", self.set_bookmark)
         self.vbox.append(self.menu)
 
+        self.tabbar = Gtk.Notebook()
+        self.tabbar.set_scrollable(True)
+        self.vbox.add(self.tabbar)
+
         self.addressbar = Gtk.Entry()
         self.addressbar.set_text(starturl)
         self.addressbar.set_name('addressbar')
