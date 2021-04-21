@@ -207,6 +207,8 @@ class Browser(Gtk.Window):
         self.tabbar.set_scrollable(True)
         self.vbox.add(self.tabbar)
 
+        self.tabs = []
+
         self.addressbar = Gtk.Entry()
         self.addressbar.set_text(starturl)
         self.addressbar.set_name('addressbar')
