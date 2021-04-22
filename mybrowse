@@ -219,7 +219,7 @@ class Browser(Gtk.Window):
         self.tabs.append((self.create_tab(), Gtk.Label('Neuer Tab')))
         self.tabbar.insert_page(self.tabs[0][0], self.tabs[0][1], 0)
 
-        self.tabbar.connect("swich-page", self.tab_chaged)
+        self.tabbar.connect("swich-page", self.tab_changed)
 
         self.addressbar = Gtk.Entry()
         self.addressbar.set_text(starturl)
