@@ -209,6 +209,8 @@ class Browser(Gtk.Window):
         self.home.connect("clicked", self.go_home)
         self.searchbar.connect("activate", self.search)
         self.bookmarker.connect("clicked", self.set_bookmark)
+        self.new_tab.connect("clicked", self.new_tab)
+        self.close_tab.connect("clicked", self.close_tab)
         self.vbox.add(self.menu)
 
         self.tabbar = Gtk.Notebook()
