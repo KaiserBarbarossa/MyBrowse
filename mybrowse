@@ -341,6 +341,18 @@ class Browser(Gtk.Window):
             pass
 
 
+    def tab_changed(self, tabbar, current_page, index):
+
+
+
+    def create_tab(self):
+
+
+    def close_tab(self, widget):
+
+    def new_tab(self, widget):
+
+
     def change_url(self, widget):
         url = self.addressbar.get_text()
         if url in (':back', ':undo', ':u'):
