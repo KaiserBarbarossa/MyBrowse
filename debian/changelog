@@ -1,3 +1,11 @@
+mybrowse (0.3.1-0ubuntu1) hirsute; urgency=low
+
+   * "file://" is added to local urls if not exists
+   * Add possibility to enable WebGL (set webgl value in configuration file)
+   * Fallback to configuration values if not given in configuration file and add them to the file
+
+ -- tuxifreund <kaiser.barbarossa@yandex.com>  Fri, 23 Apr 2021 19:44:50 +0100
+
 mybrowse (0.3-0ubuntu1) groovy; urgency=medium
 
    * Use Firefox’ user-agent as default
