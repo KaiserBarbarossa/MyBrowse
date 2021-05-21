@@ -64,11 +64,13 @@ def links(input):
             if url.startswith('/'):
                href = "file://" + url
             else:
-              href = "https://" + url
+               href = "https://" + url
         elif url == "about:bookmarks":
             href = 'file://' + conf_dir + 'bookmarks.html'
         elif url == "about:history":
             href = 'file://' + conf_dir + 'history'
+        else:
+            href = url
     else:
         if url == ':report':
            href = 'https://github.com/KaiserBarbarossa/MyBrowse/issues/new'
