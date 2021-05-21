@@ -57,8 +57,27 @@ config = configparser.ConfigParser()
 config.read(conf_file)
 searchengine = config['General']['search']
 startpage = config['General']['home']
+def links(input):
+    url = input
+    if not url.startswith(':'):
+        if not ":" in url:
+            if url.startswith('/'):
+               href = "file://" + url
+            else:
+              href = "https://" + url
+        elif url == "about:bookmarks":
+            href = 'file://' + conf_dir + 'bookmarks.html'
+        elif url == "about:history":
+            href = 'file://' + conf_dir + 'history'
+    else:
+        if url == ':report':
+           href = 'https://github.com/KaiserBarbarossa/MyBrowse/issues/new'
+        elif url == ':home':
+           href = startpage
+    return href
+
 if len(sys.argv) > 1:
-        starturl = sys.argv[1]
+        starturl = links(sys.argv[1])
 else:
         starturl = startpage
 
@@ -153,28 +172,14 @@ class Browser(Gtk.Window):
 
     def change_url(self, widget):
         url = self.addressbar.get_text()
-        if not url.startswith(':'):
-           if not ":" in url:
-              if url.startswith('/'):
-                url = "file://" + url
-              else:
-                url = "https://" + url
-           elif url == "about:bookmarks":
-              url = 'file://' + conf_dir + 'bookmarks.html'
-           elif url == "about:history":
-              url = 'file://' + conf_dir + 'history'
-           self.view.load_uri(url)
+        if url == ':back' or url == ':undo' or url == ':u':
+            self.view.go_back()
+        elif url == ':forward' or url == ':redo' or url == ':r':
+            self.view.go_forward()
+        elif url == ':reload' or url == ':rl':
+            self.view.reload()
         else:
-           if url == ':report':
-                self.view.load_uri('https://github.com/KaiserBarbarossa/MyBrowse/issues/new')
-           elif url == ':home':
-                self.view.load_uri(startpage)
-           elif url == ':back' or url == ':undo' or url == ':u':
-                self.view.go_back()
-           elif url == ':forward' or url == ':redo' or url == ':r':
-                self.view.go_forward()
-           elif url == ':reload' or url == ':rl':
-                self.view.reload()
+            self.view.load_uri(links(url))
 
     def change_title(self, widget, data, *arg):
         title = widget.get_title()
