@@ -166,6 +166,10 @@ class Browser(Gtk.Window):
             config['Browser']['webgl'] = 'True'
             with open(conf_file, 'w') as configfile:
                     config.write(configfile)
+        try:
+            self.view.set_zoom_level(float(config['General']['zoom']))
+        except KeyError:
+            pass
 
     def change_url(self, widget):
         url = self.addressbar.get_text()
