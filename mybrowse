@@ -228,7 +228,10 @@ class Browser(Gtk.Window):
 
     def progressbar(self, widget, data, *arg):
         amount = widget.get_estimated_load_progress()
-        self.addressbar.set_progress_fraction(amount)
+        if not amount == 1:
+            self.addressbar.set_progress_fraction(amount)
+        else:
+            self.addressbar.set_progress_fraction(0)
 
     def keybinding(self, widget, event):
         if (event.keyval == Gdk.keyval_from_name('d') and
