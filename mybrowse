@@ -182,6 +182,8 @@ class Browser(Gtk.Window):
             self.view.go_forward()
         elif url == ':reload' or url == ':rl':
             self.view.reload()
+        elif url.startswith(':q'):
+            Gtk.main_quit()
         else:
             self.view.load_uri(links(url))
 
@@ -258,6 +260,9 @@ class Browser(Gtk.Window):
         if (event.keyval == Gdk.unicode_to_keyval(ord('-')) and
             event.state == Gdk.ModifierType.CONTROL_MASK):
                 self.view.set_zoom_level(self.view.get_zoom_level() - 0.1)
+        if (event.keyval == Gdk.keyval_from_name('q') and
+            event.state == Gdk.ModifierType.CONTROL_MASK):
+                Gtk.main_quit()
 
 if __name__ == "__main__":
     browser = Browser()
