@@ -75,6 +75,9 @@ def links(input):
            href = 'https://github.com/KaiserBarbarossa/MyBrowse/issues/new'
         elif url == ':home':
            href = startpage
+        elif url.startswith(':open') or url.startswith(':o') or url.startswith(':e'):
+           spliturl = url.split()
+           href = links(spliturl[1])
     return href
 
 if len(sys.argv) > 1:
