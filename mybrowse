@@ -56,8 +56,7 @@ config = configparser.ConfigParser()
 config.read(conf_file)
 searchengine = config['General']['search']
 startpage = config['General']['home']
-def links(input):
-    url = input
+def links(url):
     if not url.startswith(':'):
         if not ":" in url:
             if url.startswith('/'):
@@ -76,8 +75,7 @@ def links(input):
         elif url == ':home':
            href = startpage
         elif url.startswith(':open') or url.startswith(':o') or url.startswith(':e'):
-           spliturl = url.split()
-           href = links(spliturl[1])
+           href = links(url.split()[1])
     return href
 
 if len(sys.argv) > 1:
