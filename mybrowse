@@ -264,8 +264,10 @@ class Browser(Gtk.Window):
 
 if __name__ == "__main__":
     browser = Browser()
-    browser.set_default_size(1024, 704)
-    browser.maximize()
+    try:
+        browser.set_default_size(float(config['Browser']['windowwidth']), float(config['Browser']['windowheight']))
+    except KeyError:
+        browser.maximize()
     browser.connect("delete-event", Gtk.main_quit)
     browser.show_all()
     Gtk.main()
