@@ -148,6 +148,10 @@ class Browser(Gtk.Window):
 
         settings = self.view.get_settings()
         try:
+            settings.set_property('enable_write_console_messages_to_stdout', config['General']['debug'])
+        except KeyError:
+            pass
+        try:
              settings.set_property('user-agent', config['Browser']['user-agent'])
         except KeyError:
              print('User-Agent value not set. Use fallback value\r')
