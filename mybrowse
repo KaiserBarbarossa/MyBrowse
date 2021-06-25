@@ -175,6 +175,11 @@ class Browser(Gtk.Window):
             self.view.set_zoom_level(float(config['General']['zoom']))
         except KeyError:
             pass
+        try:
+            settings.set_property('zoom-text-only',
+                    config['Browser']['zoom-text-only'])
+        except KeyError:
+            pass
 
     def change_url(self, widget):
         url = self.addressbar.get_text()
