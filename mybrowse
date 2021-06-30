@@ -56,6 +56,19 @@ config = configparser.ConfigParser()
 config.read(conf_file)
 searchengine = config['General']['search']
 startpage = config['General']['home']
+
+extension_dir = f"{Path.home()}/.local/share/mybrowse/extensions/"
+
+ep = Path(extension_dir)
+
+if not ep.is_dir():
+    try:
+        ep.mkdir(parents=True)
+        print("Create extension directory\r")
+    except OSError as e:
+        print(e)
+        pass
+
 def links(url):
     if not url.startswith(':'):
         if not ":" in url:
@@ -87,7 +100,10 @@ class Browser(Gtk.Window):
     def __init__(self):
         Gtk.Window.__init__(self, title='MyBrowse')
 
-        self.view = WebKit2.WebView()
+        self.context = WebKit2.WebContext.get_default()
+        self.context.set_web_extensions_directory(extension_dir)
+
+        self.view = WebKit2.WebView.new_with_context(self.context)
 
         self.vbox = Gtk.Box(orientation=Gtk.STYLE_CLASS_VERTICAL)
         self.vbox.expand = True
