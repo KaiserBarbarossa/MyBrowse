@@ -256,6 +256,7 @@ class Browser(Gtk.Window):
             self.addressbar.set_progress_fraction(amount)
         else:
             self.addressbar.set_progress_fraction(0)
+            self.view.grab_focus()
 
     def keybinding(self, widget, event):
         if (event.keyval == Gdk.keyval_from_name('d') and
