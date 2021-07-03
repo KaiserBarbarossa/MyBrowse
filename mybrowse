@@ -283,6 +283,9 @@ class Browser(Gtk.Window):
         if (event.keyval == Gdk.keyval_from_name('q') and
             event.state == Gdk.ModifierType.CONTROL_MASK):
                 Gtk.main_quit()
+        if (event.keyval == Gdk.keyval_from_name('l') and
+            event.state == Gdk.ModifierType.CONTROL_MASK):
+               self.addressbar.grab_focus() 
 
 if __name__ == "__main__":
     browser = Browser()
