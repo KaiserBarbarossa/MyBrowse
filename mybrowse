@@ -79,10 +79,10 @@ def links(url):
         elif '://' in url: # Custom "protocols"
             try:
                 for key in config['Protocols']:
-                    if url.startswith(key):
+                    try:
                         href = config['Protocols'][url.split('://', 1)[0]] + url.split('://', 1)[1]
-                    else:
-                        pass
+                    except KeyError:
+                        href = url
             except KeyError:
                 pass
         else:
