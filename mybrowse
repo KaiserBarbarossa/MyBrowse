@@ -76,6 +76,15 @@ def links(url):
             href = 'file://' + conf_dir + 'bookmarks.html'
         elif url == "about:history":
             href = 'file://' + conf_dir + 'history'
+        elif '://' in url: # Custom "protocols"
+            try:
+                for key in config['Protocols']:
+                    if url.startswith(key):
+                        href = config['Protocols'][url.split('://', 1)[0]] + url.split('://', 1)[1]
+                    else:
+                        pass
+            except KeyError:
+                pass
         else:
             href = url
     else:
