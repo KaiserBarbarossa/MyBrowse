@@ -201,6 +201,11 @@ class Browser(Gtk.Window):
                     config['Browser']['zoom-text-only'])
         except KeyError:
             pass
+        try:
+            self.context.set_preferred_languages(config['General']['language'])
+        except KeyError:
+            pass
+
         # Cookie accept settings
         self.cookie_manager = self.context.get_cookie_manager()
         try:
