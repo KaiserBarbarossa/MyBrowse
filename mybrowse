@@ -327,13 +327,7 @@ class Browser(Gtk.Window):
             event.state == Gdk.ModifierType.CONTROL_MASK):
                self.addressbar.grab_focus()
         if (event.keyval == Gdk.KEY_Escape):
-                self.addressbar.grab_focus()
-        # Only go back if not addressbar or searchbar has focus
-        # TODO: do not go back if a html entry field is focused
-        if (event.keyval == 65288 and 
-            not self.addressbar.has_focus() and
-            not self.searchbar.has_focus()):
-                self.view.go_back()
+               self.addressbar.grab_focus()
 
 if __name__ == "__main__":
     browser = Browser()
