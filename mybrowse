@@ -59,6 +59,7 @@ searchengine = config['General']['search']
 startpage = config['General']['home']
 
 extension_dir = f"{Path.home()}/.local/share/mybrowse/extensions/"
+conf_dir = f"{Path.home()}/.config/mybrowse/"
 
 def links(url):
     if not url.startswith(':'):
