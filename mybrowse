@@ -244,6 +244,9 @@ class Browser(Gtk.Window):
             self.view.reload()
         elif url.startswith(':q'):
             Gtk.main_quit()
+        elif url.startswith(':exec'):
+            import os
+            os.system(url.split(':exec ', 1)[1])
         else:
             self.view.load_uri(links(url))
 
