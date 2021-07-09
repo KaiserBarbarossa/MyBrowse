@@ -25,18 +25,21 @@ gi.require_version('Gtk', '3.0')
 gi.require_version('Gdk', '3.0')
 from gi.repository import Gtk, WebKit2, Gdk
 
-conf_dir = f"{Path.home()}/.config/mybrowse/"
+# Create needed directories
 
-p = Path(conf_dir)
+dir_tuple = [(f"{Path.home()}/.config/mybrowse", "configuration directory"),
+(f"{Path.home()}/.local/share/mybrowse/extensions", "extension directory")]
 
-if not p.is_dir():
+for (directory, description) in dir_tuple:
+    if not Path(directory).is_dir():
         try:
-                p.mkdir()
+            Path(directory).mkdir(parents=True)
+            print("Create " + description)
         except OSError as e:
-                print(e)
-                pass
+            print(e)
+            pass
 
-conf_file = f"{p}/mybrowse.cfg"
+conf_file = f"{Path.home()}/.config/mybrowse/mybrowse.cfg"
 
 if not Path(conf_file).exists():
         print('No configuration found')
@@ -54,16 +57,6 @@ searchengine = config['General']['search']
 startpage = config['General']['home']
 
 extension_dir = f"{Path.home()}/.local/share/mybrowse/extensions/"
-
-ep = Path(extension_dir)
-
-if not ep.is_dir():
-    try:
-        ep.mkdir(parents=True)
-        print("Create extension directory\r")
-    except OSError as e:
-        print(e)
-        pass
 
 def links(url):
     if not url.startswith(':'):
