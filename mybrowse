@@ -48,6 +48,8 @@ if not Path(conf_file).exists():
 [General]
 home = https://lite.duckduckgo.com
 search = https://duckduckgo.com/?q=
+
+[Browser]
 ''')
                 f.close()
 
