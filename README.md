@@ -6,7 +6,7 @@ MyBrowse is a simple webbrowser written in Python3 using GTK and WebKit.
 
 ## Support
 
- * #mybrowse on [irc.libera.chat](https://libera.chat) ([webchat](https://kiwiirc.com/nextclient/irc.libera.chat/?#mybrowse))
+ * #mybrowse on [irc.libera.chat](https://libera.chat) ([webchat](https://web.libera.chat/?channel=#mybrowse), [via Matrix](https://matrix.to/#/#mybrowse:libera.chat))
 
 ## Installation
 
