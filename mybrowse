@@ -168,11 +168,19 @@ class Browser(Gtk.Window):
         
         self.addressbar.connect("activate", self.change_url)
 
+        self.sidesearchbar = Gtk.SearchBar()
+        self.searchentry = Gtk.SearchEntry()
+        self.searchentry.connect("activate", self.search_page)
+        self.sidesearchbar.connect_entry(self.searchentry)
+        self.sidesearchbar.add(self.searchentry)
+        self.findcontroller = WebKit2.FindController(web_view=self.view)
+
 
         self.sw = Gtk.ScrolledWindow()
         self.sw.add(self.view)
 
         self.vbox.pack_start(self.sw, True, True, 0)
+        self.vbox.pack_end(self.sidesearchbar, False, False, 10)
         self.add(self.vbox)
         self.view.load_uri(starturl)
         self.view.connect("notify::uri", self.change_uri)
