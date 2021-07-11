@@ -168,11 +168,11 @@ class Browser(Gtk.Window):
         
         self.addressbar.connect("activate", self.change_url)
 
-        self.sidesearchbar = Gtk.SearchBar()
+        self.sitesearchbar = Gtk.SearchBar()
         self.searchentry = Gtk.SearchEntry()
         self.searchentry.connect("activate", self.search_page)
-        self.sidesearchbar.connect_entry(self.searchentry)
-        self.sidesearchbar.add(self.searchentry)
+        self.sitesearchbar.connect_entry(self.searchentry)
+        self.sitesearchbar.add(self.searchentry)
         self.findcontroller = WebKit2.FindController(web_view=self.view)
 
 
@@ -180,7 +180,7 @@ class Browser(Gtk.Window):
         self.sw.add(self.view)
 
         self.vbox.pack_start(self.sw, True, True, 0)
-        self.vbox.pack_end(self.sidesearchbar, False, False, 10)
+        self.vbox.pack_end(self.sitesearchbar, False, False, 10)
         self.add(self.vbox)
         self.view.load_uri(starturl)
         self.view.connect("notify::uri", self.change_uri)
@@ -361,8 +361,17 @@ class Browser(Gtk.Window):
         if (event.keyval == Gdk.keyval_from_name('l') and
             event.state == Gdk.ModifierType.CONTROL_MASK):
                self.addressbar.grab_focus()
-        if (event.keyval == Gdk.KEY_Escape):
+        if (event.keyval == Gdk.KEY_Escape and not
+            self.searchentry.has_focus()):
                self.addressbar.grab_focus()
+        if (event.keyval == Gdk.KEY_Escape and
+            self.searchbar.has_focus()):
+                self.sitesearchbar.set_search_mode(False)
+                self.findcontroller.search_finish()
+        if (event.keyval == Gdk.keyval_from_name('f') and
+            event.state == Gdk.ModifierType.CONTROL_MASK):
+            self.sitesearchbar.set_search_mode(True)
+            self.search_page()
 
 if __name__ == "__main__":
     browser = Browser()
