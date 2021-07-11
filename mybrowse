@@ -327,6 +327,12 @@ class Browser(Gtk.Window):
             self.addressbar.set_progress_fraction(0)
             self.view.grab_focus()
 
+    def search_page(self, *args):
+        keyword = self.searchentry.get_text()
+        if not keyword == "":
+            self.findcontroller.search(keyword, WebKit2.FindOptions.CASE_INSENSITIVE,
+                    WebKit2.FindOptions.WRAP_AROUND)
+
     def keybinding(self, widget, event):
         if (event.keyval == Gdk.keyval_from_name('d') and
             event.state == Gdk.ModifierType.CONTROL_MASK):
