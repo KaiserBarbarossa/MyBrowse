@@ -72,6 +72,8 @@ def links(url):
             href = 'file://' + conf_dir + 'bookmarks.html'
         elif url == "about:history":
             href = 'file://' + conf_dir + 'history'
+        elif url == 'about:home':
+            href = startpage
         elif '://' in url: # Custom "protocols"
             try:
                 for key in config['Protocols']:
