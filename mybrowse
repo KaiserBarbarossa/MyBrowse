@@ -168,19 +168,12 @@ class Browser(Gtk.Window):
         
         self.addressbar.connect("activate", self.change_url)
 
-        self.sitesearchbar = Gtk.SearchBar()
-        self.searchentry = Gtk.SearchEntry()
-        self.searchentry.connect("activate", self.search_page)
-        self.sitesearchbar.connect_entry(self.searchentry)
-        self.sitesearchbar.add(self.searchentry)
         self.findcontroller = WebKit2.FindController(web_view=self.view)
-
 
         self.sw = Gtk.ScrolledWindow()
         self.sw.add(self.view)
 
         self.vbox.pack_start(self.sw, True, True, 0)
-        self.vbox.pack_end(self.sitesearchbar, False, False, 10)
         self.add(self.vbox)
         self.view.load_uri(starturl)
         self.view.connect("notify::uri", self.change_uri)
@@ -272,6 +265,8 @@ class Browser(Gtk.Window):
             self.view.go_forward()
         elif url in (':reload', ':rl'):
             self.view.reload()
+        elif url.startswith(':/'):
+            self.search_page(url.split(':/', 1)[1])
         else:
             self.view.load_uri(links(url))
 
@@ -328,7 +323,7 @@ class Browser(Gtk.Window):
             self.view.grab_focus()
 
     def search_page(self, *args):
-        keyword = self.searchentry.get_text()
+        keyword = args[0]
         if not keyword == "":
             self.findcontroller.search(keyword, WebKit2.FindOptions.CASE_INSENSITIVE,
                     WebKit2.FindOptions.WRAP_AROUND)
@@ -370,8 +365,9 @@ class Browser(Gtk.Window):
                 self.findcontroller.search_finish()
         if (event.keyval == Gdk.keyval_from_name('f') and
             event.state == Gdk.ModifierType.CONTROL_MASK):
-            self.sitesearchbar.set_search_mode(True)
-            self.search_page()
+            self.addressbar.grab_focus()
+            self.addressbar.set_text(':/')
+            self.addressbar.set_position(-1)
 
 if __name__ == "__main__":
     browser = Browser()
