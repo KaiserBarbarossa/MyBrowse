@@ -82,7 +82,7 @@ def links(url):
                     except KeyError:
                         href = url
             except KeyError:
-                pass
+                href = url
         else:
             href = url
     else:
