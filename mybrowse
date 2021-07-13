@@ -61,6 +61,13 @@ startpage = config['General']['home']
 extension_dir = f"{Path.home()}/.local/share/mybrowse/extensions/"
 conf_dir = f"{Path.home()}/.config/mybrowse/"
 
+def editconfig(settings):
+    key = settings.split('=', 1)[0]
+    value = settings.split('=', 1)[1]
+    config[key.split('.')[0]][key.split('.')[1]] = value
+    with open(conf_file, 'w') as configfile:
+        config.write(configfile)
+
 def links(url):
     if not url.startswith(':'):
         if not ":" in url:
@@ -94,6 +101,8 @@ def links(url):
            href = links(url.split()[1])
         elif url.startswith(':q'):
             Gtk.main_quit()
+        elif url.startswith(':set'):
+            editconfig(url.split(':set ', 1)[1])
     return href
 
 if len(sys.argv) > 1:
