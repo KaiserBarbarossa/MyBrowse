@@ -176,6 +176,10 @@ class Browser(Gtk.Window):
         self.view.connect("notify::estimated-load-progress", self.progressbar)
         self.connect("key-press-event", self.keybinding)
 
+        # Load configuration on startup
+        self.configuration()
+
+    def configuration(self, *args):
         settings = self.view.get_settings()
         try:
             settings.set_property('enable_write_console_messages_to_stdout', config['General']['debug'])
