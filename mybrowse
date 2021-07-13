@@ -253,11 +253,11 @@ class Browser(Gtk.Window):
 
     def change_url(self, widget):
         url = self.addressbar.get_text()
-        if url == ':back' or url == ':undo' or url == ':u':
+        if url in (':back', ':undo', ':u'):
             self.view.go_back()
-        elif url == ':forward' or url == ':redo' or url == ':r':
+        elif url in (':forward', ':redo', ':r'):
             self.view.go_forward()
-        elif url == ':reload' or url == ':rl':
+        elif url in (':reload', ':rl'):
             self.view.reload()
         elif url.startswith(':exec'):
             import os
@@ -304,7 +304,7 @@ class Browser(Gtk.Window):
         bm_file.close()
 
     def link_hover(self, widget, hit_test, *args):
-        if not hit_test.get_link_uri () == None:
+        if not hit_test.get_link_uri () is None:
                 self.addressbar.set_text(hit_test.get_link_uri ())
         else:
                 self.addressbar.set_text(widget.get_uri())
