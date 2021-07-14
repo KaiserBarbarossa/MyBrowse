@@ -95,7 +95,10 @@ def links(url):
         else:
             href = url
     else:
-        if url == ':report':
+        if url.startswith(':exec'):
+            import os
+            os.system(url.split(':exec ', 1)[1])
+        elif url == ':report':
            href = 'https://github.com/KaiserBarbarossa/MyBrowse/issues/new'
         elif url == ':home':
            href = startpage
@@ -261,9 +264,6 @@ class Browser(Gtk.Window):
             self.view.go_forward()
         elif url in (':reload', ':rl'):
             self.view.reload()
-        elif url.startswith(':exec'):
-            import os
-            os.system(url.split(':exec ', 1)[1])
         else:
             self.view.load_uri(links(url))
 
