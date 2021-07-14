@@ -279,6 +279,7 @@ class Browser(Gtk.Window):
 
     def change_uri(self, widget, data, *arg):
         uri = widget.get_uri()
+        self.view.load_uri(links(uri))
         self.addressbar.set_text(uri)
         history = open(conf_dir + 'history', 'a')
         history.write(uri + '\r\n')
