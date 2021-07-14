@@ -1,3 +1,4 @@
+
 # MyBrowse
 
 MyBrowse is a simple webbrowser written in Python3 using GTK and WebKit.
@@ -10,12 +11,17 @@ MyBrowse is a simple webbrowser written in Python3 using GTK and WebKit.
 
 ## Installation
 
-### Ubuntu-based
+### Debian/Ubuntu
 
 Installation on Ubuntu based distributions is possible with a PPA:
 
     sudo apt-add-repository ppa:tuxifreund/mybrowse
     sudo apt-get install mybrowse
+
+Additionally MyBrowse is present in the [MPR](https://mpr.hunterwittenborn.com/packages/mybrowse). Installation is pretty straightforward:
+
+    git clone https://mpr.hunterwittenborn.com/mybrowse.git && cd mybrowse
+    makedeb -s && sudo dpkg -i "$PWD"/mybrowse_*.deb
 
 ### Arch
 
