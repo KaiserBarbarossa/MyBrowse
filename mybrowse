@@ -356,13 +356,8 @@ class Browser(Gtk.Window):
         if (event.keyval == Gdk.keyval_from_name('l') and
             event.state == Gdk.ModifierType.CONTROL_MASK):
                self.addressbar.grab_focus()
-        if (event.keyval == Gdk.KEY_Escape and not
-            self.searchentry.has_focus()):
+        if event.keyval == Gdk.KEY_Escape:
                self.addressbar.grab_focus()
-        if (event.keyval == Gdk.KEY_Escape and
-            self.searchbar.has_focus()):
-                self.sitesearchbar.set_search_mode(False)
-                self.findcontroller.search_finish()
         if (event.keyval == Gdk.keyval_from_name('f') and
             event.state == Gdk.ModifierType.CONTROL_MASK):
             self.addressbar.grab_focus()
