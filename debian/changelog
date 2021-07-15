@@ -1,3 +1,21 @@
+mybrowse (0.4-0ubuntu1) impish; urgency=medium
+
+   * "Link-Logic" is moved into seperate function
+   * Do not hardcode useragent
+   * Implement content zoom
+   * Don’t display progressbar if loading page has finished
+   * More commands
+   * configuration option to define window size
+   * Support WebKit2Gtk+-extensions
+   * Focus website if loading page has finished (Closes #9)
+   * Focus addressbar with [Ctrl]+[L] and [Esc]
+   * Allow user-set "protocols"
+   * Add "about:home" as pseudo url
+   * Open local hiles if prefixed with "~"
+   * Implement basic search function
+
+ -- tuxifreund <kaiser.barbarossa@yandex.com>  Thu, 15 Jul 2021 09:15:50 +0200
+
 mybrowse (0.3.1-0ubuntu1) hirsute; urgency=low
 
    * "file://" is added to local urls if not exists
