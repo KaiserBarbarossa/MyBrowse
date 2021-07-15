@@ -108,7 +108,10 @@ def links(url):
             Gtk.main_quit()
         elif url.startswith(':set'):
             editconfig(url.split(':set ', 1)[1])
-    return href
+    try:
+        return href
+    except UnboundLocalError:
+        pass
 
 if len(sys.argv) > 1:
         starturl = links(sys.argv[1])
@@ -268,7 +271,10 @@ class Browser(Gtk.Window):
         elif url.startswith(':/'):
             self.search_page(url.split(':/', 1)[1])
         else:
-            self.view.load_uri(links(url))
+            try:
+                self.view.load_uri(links(url))
+            except TypeError:
+                pass
 
     def change_title(self, widget, data, *arg):
         title = widget.get_title()
