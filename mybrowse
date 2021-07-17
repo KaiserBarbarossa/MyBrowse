@@ -103,7 +103,7 @@ def links(url):
         elif url == ':home':
            href = startpage
         elif url.startswith(':open') or url.startswith(':o') or url.startswith(':e'):
-           href = links(url.split()[1])
+           href = links(url.split(' ', 1)[1])
         elif url.startswith(':q'):
             Gtk.main_quit()
         elif url.startswith(':set'):
