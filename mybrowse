@@ -19,6 +19,7 @@
 import configparser
 import sys
 from pathlib import Path
+import argparse
 import gi
 gi.require_version('WebKit2', '4.0')
 gi.require_version('Gtk', '3.0')
@@ -113,8 +114,12 @@ def links(url):
     except UnboundLocalError:
         pass
 
-if len(sys.argv) > 1:
-        starturl = ' '.join(sys.argv[1:])
+argparser = argparse.ArgumentParser(description='A simple and lightweight browser written in Python.')
+argparser.add_argument('url', help='URL/command to open/execute at startup', nargs='*')
+args = argparser.parse_args()
+
+if len(args.url) > 0:
+        starturl = ' '.join(args.url[0:])
 else:
         starturl = startpage
 
