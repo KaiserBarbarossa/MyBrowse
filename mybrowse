@@ -114,7 +114,7 @@ def links(url):
         pass
 
 if len(sys.argv) > 1:
-        starturl = links(sys.argv[1])
+        starturl = ' '.join(sys.argv[1:])
 else:
         starturl = startpage
 
@@ -285,8 +285,11 @@ class Browser(Gtk.Window):
 
     def change_uri(self, widget, data, *arg):
         uri = widget.get_uri()
-        self.view.load_uri(links(uri))
-        self.addressbar.set_text(uri)
+        try:
+            self.view.load_uri(links(uri))
+            self.addressbar.set_text(uri)
+        except TypeError:
+            pass
         history = open(conf_dir + 'history', 'a')
         history.write(uri + '\r\n')
         history.close()
