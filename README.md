@@ -39,3 +39,7 @@ Or use your prefered AUR-helper. It would be a pleasure, if you’d vote for the
  * seperate search and addressbar
  * history
  * automatic use of https
+
+## Donating
+
+Donating is currently only possible via Bitcoin: bc1qfg6uy36es7ycsyw5g50wjz45hfs5ke5w8twfap
