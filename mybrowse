@@ -108,6 +108,8 @@ def links(url):
             Gtk.main_quit()
         elif url.startswith(':set'):
             editconfig(url.split(':set ', 1)[1])
+        else:
+            href = url
     try:
         return href
     except UnboundLocalError:
