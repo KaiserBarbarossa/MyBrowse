@@ -36,9 +36,12 @@ args = argparser.parse_args()
 try:
     basedir = os.environ['MYBROWSE_HOME']
 except KeyError:
-    if len(args.basedir) > 0:
-        basedir = args.basedir[0:]
-    else:
+    try:
+        if len(args.basedir) > 0:
+            basedir = args.basedir[0:]
+        else:
+            basedir = Path.home()
+    except TypeError:
         basedir = Path.home()
 
 dir_tuple = [(f"{basedir}/.config/mybrowse", "configuration directory"),
