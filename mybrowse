@@ -19,6 +19,7 @@
 import configparser
 from pathlib import Path
 import argparse
+import os
 import gi
 gi.require_version('WebKit2', '4.0')
 gi.require_version('Gtk', '3.0')
@@ -32,10 +33,13 @@ args = argparser.parse_args()
 
 # Create needed directories
 
-if len(args.basedir) > 0:
-    basedir = args.basedir[0:]
-else:
-    basedir = Path.home()
+try:
+    basedir = os.environ['MYBROWSE_HOME']
+except KeyError:
+    if len(args.basedir) > 0:
+        basedir = args.basedir[0:]
+    else:
+        basedir = Path.home()
 
 dir_tuple = [(f"{basedir}/.config/mybrowse", "configuration directory"),
 (f"{basedir}/.local/share/mybrowse/extensions", "extension directory")]
@@ -106,7 +110,6 @@ def links(url):
             href = url
     else:
         if url.startswith(':exec'):
-            import os
             os.system(url.split(':exec ', 1)[1])
         elif url == ':report':
            href = 'https://github.com/KaiserBarbarossa/MyBrowse/issues/new'
