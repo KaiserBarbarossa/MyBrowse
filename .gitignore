@@ -1,2 +1,5 @@
 *~
 *.pyc
+/build
+/dist
+/mybrowse.egg-info
