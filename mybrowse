@@ -51,7 +51,7 @@ for (directory, description) in dir_tuple:
     if not Path(directory).is_dir():
         try:
             Path(directory).mkdir(parents=True)
-            print("Create " + description)
+            print(f'Create {description}')
         except OSError as e:
             print(e)
             pass
@@ -89,22 +89,22 @@ def links(url):
     if not url.startswith(':'):
         if not ":" in url:
             if url.startswith('/'):
-               href = "file://" + url
+               href = f'file://{url}'
             elif url.startswith('~'):
-               href = 'file://' + str(Path.home()) + url.split('~', 1)[1]
+               href = f"file://{str(Path.home())}{url.split('~', 1)[1]}"
             else:
-               href = "https://" + url
+               href = f'https://{url}'
         elif url == "about:bookmarks":
-            href = 'file://' + conf_dir + 'bookmarks.html'
+            href = f'file://{conf_dir}bookmarks.html'
         elif url == "about:history":
-            href = 'file://' + conf_dir + 'history'
+            href = f'file://{conf_dir}history'
         elif url == 'about:home':
             href = startpage
         elif '://' in url: # Custom "protocols"
             try:
                 for key in config['Protocols']:
                     try:
-                        href = config['Protocols'][url.split('://', 1)[0]] + url.split('://', 1)[1]
+                        href = f"{config['Protocols'][url.split('://', 1)[0]]}{url.split('://', 1)[1]}"
                     except KeyError:
                         href = url
             except KeyError:
@@ -299,7 +299,7 @@ class Browser(Gtk.Window):
         if title == '':
                 self.set_title('MyBrowse')
         else:
-                self.set_title(title + ' - MyBrowse')
+                self.set_title(f'{title} - MyBrowse')
 
     def change_uri(self, widget, data, *arg):
         uri = widget.get_uri()
@@ -308,8 +308,8 @@ class Browser(Gtk.Window):
             self.addressbar.set_text(uri)
         except TypeError:
             pass
-        history = open(conf_dir + 'history', 'a')
-        history.write(uri + '\r\n')
+        history = open(f'{conf_dir}history', 'a')
+        history.write(f'{uri}\r\n')
         history.close()
 
     def go_back(self, widget):
@@ -327,13 +327,13 @@ class Browser(Gtk.Window):
 
     def search(self, searchbar):
         searchstring = self.searchbar.get_text()
-        self.view.load_uri(searchengine + searchstring)
+        self.view.load_uri(f'{searchengine}{searchstring}')
 
     def set_bookmark(self, widget):
         url = self.addressbar.get_text()
         title = self.view.get_title()
-        bm_file =  open(conf_dir + 'bookmarks.html', 'a')
-        bm_file.write('<a href="' + url + '">' + title + '</a><br>\r\n')
+        bm_file =  open(f'{conf_dir}bookmarks.html', 'a')
+        bm_file.write(f'<a href="{url}">{title}</a><br>\r\n')
         bm_file.close()
 
     def link_hover(self, widget, hit_test, *args):
