@@ -342,7 +342,7 @@ class Browser(Gtk.Window):
         bm_file.close()
 
     def link_hover(self, widget, hit_test, *args):
-        if not self.addressbar.has_focus() and self.addressbar.get_text().startswith(':'):
+        if not (self.addressbar.has_focus() and self.addressbar.get_text().startswith(':')):
             if hit_test.get_link_uri() is not None:
                 self.addressbar.set_text(hit_test.get_link_uri())
             else:
