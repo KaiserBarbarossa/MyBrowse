@@ -386,7 +386,11 @@ class Browser(Gtk.Window):
             event.state == Gdk.ModifierType.CONTROL_MASK):
                self.addressbar.grab_focus()
         if (event.keyval == Gdk.KEY_Escape and
-            self.addressbar.get_text() is not self.view.get_uri()):
+            self.addressbar.get_text().startswith(':/')):
+                self.findcontroller.search_finish()
+        if (event.keyval == Gdk.KEY_Escape and
+            (self.addressbar.get_text() is not self.view.get_uri()
+            or self.addressbar.get_text().startswith(':/'))):
             self.addressbar.set_text(self.view.get_uri())
         if (event.keyval == Gdk.KEY_Escape and
             self.addressbar.get_text() == self.view.get_uri()):
