@@ -332,8 +332,13 @@ class Browser(Gtk.Window):
     def set_bookmark(self, widget):
         url = self.addressbar.get_text()
         title = self.view.get_title()
-        bm_file =  open(f'{conf_dir}bookmarks.html', 'a')
-        bm_file.write(f'<a href="{url}">{title}</a><br>\r\n')
+        bm_file_path = f'{conf_dir}bookmarks.html'
+        bm_file =  open(bm_file_path, 'a+')
+        if open(bm_file_path, 'r').read() == "":
+            bm_content = f'<!DOCTYPE html>\n<head>\n<meta charset="utf-8">\n</head>\n<body>\n<a href="{url}">{title}</a><br>\r\n'
+        else:
+            bm_content = f'<a href="{url}">{title}</a><br>\r\n'
+        bm_file.write(bm_content)
         bm_file.close()
 
     def link_hover(self, widget, hit_test, *args):
