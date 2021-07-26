@@ -45,6 +45,7 @@ except KeyError:
         basedir = Path.home()
 
 dir_tuple = [(f"{basedir}/.config/mybrowse", "configuration directory"),
+(f"{basedir}/.local/share/mybrowse/themes", "theme directory"),
 (f"{basedir}/.local/share/mybrowse/extensions", "extension directory")]
 
 for (directory, description) in dir_tuple:
@@ -76,6 +77,7 @@ searchengine = config['General']['search']
 startpage = config['General']['home']
 
 extension_dir = f"{basedir}/.local/share/mybrowse/extensions/"
+theme_dir = f"{basedir}/.local/share/mybrowse/themes/"
 conf_dir = f"{basedir}/.config/mybrowse/"
 
 def editconfig(settings):
@@ -139,6 +141,17 @@ else:
 class Browser(Gtk.Window):
     def __init__(self):
         Gtk.Window.__init__(self, title='MyBrowse')
+
+        styleprovider = Gtk.CssProvider()
+        try:
+            cssfile = f"{theme_dir}{config['General']['theme']}/style.css"
+            styleprovider.load_from_path(cssfile)
+        except KeyError:
+            if Path(f"{conf_dir}style.css").exists():
+                styleprovider.load_from_path(f"{conf_dir}style.css")
+        style = self.get_style_context()
+        screen = Gdk.Screen.get_default()
+        style.add_provider_for_screen(screen, styleprovider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 
         self.context = WebKit2.WebContext.get_default()
         self.context.set_web_extensions_directory(extension_dir)
