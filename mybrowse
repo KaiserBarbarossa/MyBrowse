@@ -306,6 +306,7 @@ class Browser(Gtk.Window):
                 self.view.load_uri(links(url))
             except TypeError:
                 pass
+        self.configuration()
 
     def change_title(self, widget, data, *arg):
         title = widget.get_title()
