@@ -418,6 +418,9 @@ class Browser(Gtk.Window):
             self.addressbar.grab_focus()
             self.addressbar.set_text(':/')
             self.addressbar.set_position(-1)
+        if (event.keyval == Gdk.keyval_from_name('k') and
+            event.state == Gdk.ModifierType.CONTROL_MASK):
+            self.searchbar.grab_focus()
 
 if __name__ == "__main__":
     browser = Browser()
