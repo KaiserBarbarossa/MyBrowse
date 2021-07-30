@@ -186,6 +186,7 @@ class Browser(Gtk.Window):
         self.bookmarker.add(self.bookmarker_symbol)
         self.menu.add(self.bookmarker)
         self.searchbar = Gtk.SearchEntry()
+        self.searchbar.set_name('searchbar')
         self.menu.add(self.searchbar)
         
         self.back.connect("clicked", self.go_back)
@@ -198,6 +199,7 @@ class Browser(Gtk.Window):
 
         self.addressbar = Gtk.Entry()
         self.addressbar.set_text(starturl)
+        self.addressbar.set_name('addressbar')
         self.vbox.add(self.addressbar)
         
         self.addressbar.connect("activate", self.change_url)
