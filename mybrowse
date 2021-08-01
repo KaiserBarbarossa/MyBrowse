@@ -20,6 +20,7 @@ import configparser
 from pathlib import Path
 import argparse
 import os
+import tempfile
 import gi
 gi.require_version('WebKit2', '4.0')
 gi.require_version('Gtk', '3.0')
@@ -29,20 +30,25 @@ from gi.repository import Gtk, WebKit2, Gdk
 argparser = argparse.ArgumentParser(description='A simple and lightweight browser written in Python.')
 argparser.add_argument('url', help='URL/command to open/execute at startup', nargs='*')
 argparser.add_argument('--basedir', '-B', help='Base directory')
+argparser.add_argument('--temp-dir', '-t', help='create a temporary base directory'
+        ' and delete it on exit', action='store_true')
 args = argparser.parse_args()
 
 # Create needed directories
 
-try:
-    basedir = os.environ['MYBROWSE_HOME']
-except KeyError:
+if not args.temp_dir:
     try:
-        if len(args.basedir) > 0:
-            basedir = args.basedir[0:]
-        else:
+        basedir = os.environ['MYBROWSE_HOME']
+    except KeyError:
+        try:
+            if len(args.basedir) > 0:
+                basedir = args.basedir[0:]
+            else:
+                basedir = Path.home()
+        except TypeError:
             basedir = Path.home()
-    except TypeError:
-        basedir = Path.home()
+else:
+    basedir = tempfile.mkdtemp(prefix='mybrowse-')
 
 dir_tuple = [(f"{basedir}/.config/mybrowse", "configuration directory"),
 (f"{basedir}/.local/share/mybrowse/themes", "theme directory"),
