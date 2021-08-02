@@ -230,6 +230,13 @@ class Browser(Gtk.Window):
     def configuration(self, *args):
         settings = self.view.get_settings()
         try:
+            settings.set_property('enable-javascript', config['Browser']['js'])
+        except KeyError:
+            print('JavaScript not explicit disabled.\r')
+            config['Browser']['js'] = 'True'
+            with open(conf_file, 'w') as configfile:
+                config.write(configfile)
+        try:
             settings.set_property('enable_write_console_messages_to_stdout', config['General']['debug'])
         except KeyError:
             pass
