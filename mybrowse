@@ -227,17 +227,30 @@ class Browser(Gtk.Window):
         # Load configuration on startup
         self.configuration()
 
+    def str_to_bool(self, string):
+        """
+        Convert a string to its boolean. Every other string than "True" and "False"
+        is ignored and a ValueError is raised.
+        """
+        if str(string).lower() == 'true':
+            return True
+        elif str(string).lower() == 'false':
+            return False
+        raise ValueError(f'Cannot convert string to bool: {str(string)}')
+
     def configuration(self, *args):
         settings = self.view.get_settings()
         try:
-            settings.set_property('enable-javascript', config['Browser']['js'])
+            settings.set_property('enable-javascript',
+                    self.str_to_bool(config['Browser']['js']))
         except KeyError:
             print('JavaScript not explicit disabled.\r')
             config['Browser']['js'] = 'True'
             with open(conf_file, 'w') as configfile:
                 config.write(configfile)
         try:
-            settings.set_property('enable_write_console_messages_to_stdout', config['General']['debug'])
+            settings.set_property('enable_write_console_messages_to_stdout',
+                    self.str_to_bool(config['General']['debug']))
         except KeyError:
             pass
         try:
@@ -245,7 +258,8 @@ class Browser(Gtk.Window):
         except KeyError:
              print('User-Agent value not set. Use fallback value\r')
         try:
-             settings.set_property('enable-developer-extras', config['Browser']['firebug'])
+             settings.set_property('enable-developer-extras',
+                     self.str_to_bool(config['Browser']['firebug']))
         except KeyError:
              settings.set_property('enable-developer-extras', 'True')
              print('Firebug value not set. Use fallback value\r')
@@ -253,7 +267,7 @@ class Browser(Gtk.Window):
              with open(conf_file, 'w') as configfile:
                      config.write(configfile)
         try:
-            settings.set_property('enable-webgl', config['Browser']['webgl'])
+            settings.set_property('enable-webgl', self.str_to_bool(config['Browser']['webgl']))
         except KeyError:
             settings.set_property('enable-webgl', 'True')
             print('WebGL setting not set. Use fallback value\r')
