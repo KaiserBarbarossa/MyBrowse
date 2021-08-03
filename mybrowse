@@ -30,8 +30,7 @@ from gi.repository import Gtk, WebKit2, Gdk
 argparser = argparse.ArgumentParser(description='A simple and lightweight browser written in Python.')
 argparser.add_argument('url', help='URL/command to open/execute at startup', nargs='*')
 argparser.add_argument('--basedir', '-B', help='Base directory')
-argparser.add_argument('--temp-dir', '-t', help='create a temporary base directory'
-        ' and delete it on exit', action='store_true')
+argparser.add_argument('--temp-dir', '-t', help='Use a temporary base directory', action='store_true')
 args = argparser.parse_args()
 
 # Create needed directories
