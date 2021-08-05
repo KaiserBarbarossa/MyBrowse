@@ -25,7 +25,7 @@ import gi
 gi.require_version('WebKit2', '4.0')
 gi.require_version('Gtk', '3.0')
 gi.require_version('Gdk', '3.0')
-from gi.repository import Gtk, WebKit2, Gdk
+from gi.repository import Gtk, WebKit2, Gdk, GLib
 
 argparser = argparse.ArgumentParser(description='A simple and lightweight browser written in Python.')
 argparser.add_argument('url', help='URL/command to open/execute at startup', nargs='*')
@@ -369,7 +369,7 @@ class Browser(Gtk.Window):
 
     def search(self, searchbar):
         searchstring = self.searchbar.get_text()
-        self.view.load_uri(f'{searchengine}{searchstring}')
+        self.view.load_uri(f'{searchengine}{GLib.uri_escape_string(searchstring,"", True)}')
 
     def set_bookmark(self, widget):
         url = self.addressbar.get_text()
