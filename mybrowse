@@ -98,7 +98,7 @@ def links(url):
             if url.startswith('/'):
                href = f'file://{url}'
             elif url.startswith('~'):
-               href = f"file://{str(Path.home())}{url.split('~', 1)[1]}"
+               href = f"file://{str(Path(url).expanduser())}"
             else:
                href = f'https://{url}'
         elif url == "about:bookmarks":
