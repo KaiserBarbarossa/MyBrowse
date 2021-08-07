@@ -413,6 +413,9 @@ class Browser(Gtk.Window):
                 self.view.reload()
         if event.keyval == Gdk.KEY_F5:
                 self.view.reload()
+        if (event.keyval == Gdk.KEY_F5 and
+            event.state == Gdk.ModifierType.SHIFT_MASK):
+                self.view.reload_bypass_cache()
         if (event.keyval == Gdk.keyval_from_name('z') and
             event.state == Gdk.ModifierType.CONTROL_MASK):
                 self.view.go_back()
