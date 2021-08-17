@@ -308,7 +308,8 @@ class Browser(Gtk.Window):
             if config['Browser']['persistent-cookies'] == 'True':
                 storage = WebKit2.CookiePersistentStorage.TEXT
                 try:
-                    self.cookie_manager.set_persistent_storage(config['Browser']['cookiepath'], storage)
+                    self.cookie_manager.set_persistent_storage(str(Path(
+                        config['Browser']['cookiepath']).expanduser()), storage)
                 except KeyError:
                     print('Cookie file not set. Use default value.\r')
                     self.cookie_manager.set_persistent_storage('/tmp/mybrowse-cookies.txt', storage)
