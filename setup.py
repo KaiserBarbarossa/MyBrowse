@@ -45,5 +45,8 @@ setuptools.setup(
     ],
     scripts=['mybrowse'],
     python_requires='>=3.6',
+    install_requires=[
+        'PyGObject'
+    ],
 )
 
