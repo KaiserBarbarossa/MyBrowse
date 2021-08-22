@@ -77,7 +77,7 @@ search = https://duckduckgo.com/?q=
                 f.close()
 
 config = configparser.ConfigParser()
-config.read(conf_file)
+config.read(['/etc/mybrowse/mybrowse.cfg', conf_file])
 searchengine = config['General']['search']
 startpage = config['General']['home']
 
