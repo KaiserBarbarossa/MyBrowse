@@ -152,8 +152,9 @@ class Browser(Gtk.Window):
             cssfile = f"{theme_dir}{config['General']['theme']}/style.css"
             styleprovider.load_from_path(cssfile)
         except KeyError:
-            if Path(f"{conf_dir}style.css").exists():
-                styleprovider.load_from_path(f"{conf_dir}style.css")
+            pass
+        if Path(f'{conf_dir}style.css').exists():
+            styleprovider.load_from_path(f"{conf_dir}style.css")
         style = self.get_style_context()
         screen = Gdk.Screen.get_default()
         style.add_provider_for_screen(screen, styleprovider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
