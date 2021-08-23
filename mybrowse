@@ -371,7 +371,8 @@ class Browser(Gtk.Window):
 
     def search(self, searchbar):
         searchstring = self.searchbar.get_text()
-        self.view.load_uri(f'{searchengine}{GLib.uri_escape_string(searchstring,"", True)}')
+        self.view.load_uri(f'{links(searchengine)}'
+                           f'{GLib.uri_escape_string(searchstring,"", True)}')
 
     def set_bookmark(self, widget):
         url = self.addressbar.get_text()
