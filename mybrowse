@@ -409,36 +409,36 @@ class Browser(Gtk.Window):
 
     def keybinding(self, widget, event):
         if (event.keyval == Gdk.keyval_from_name('d') and
-            event.state == Gdk.ModifierType.CONTROL_MASK):
+            event.get_state() & Gdk.ModifierType.CONTROL_MASK):
                 self.set_bookmark(self.view)
         if (event.keyval == Gdk.keyval_from_name('r') and
-            event.state == Gdk.ModifierType.CONTROL_MASK):
+            event.get_state() & Gdk.ModifierType.CONTROL_MASK):
                 self.view.reload()
         if event.keyval == Gdk.KEY_F5:
                 self.view.reload()
         if (event.keyval == Gdk.KEY_F5 and
-            event.state == Gdk.ModifierType.SHIFT_MASK):
+            event.get_state() & Gdk.ModifierType.SHIFT_MASK):
                 self.view.reload_bypass_cache()
         if (event.keyval == Gdk.keyval_from_name('z') and
-            event.state == Gdk.ModifierType.CONTROL_MASK):
+            event.get_state() & Gdk.ModifierType.CONTROL_MASK):
                 self.view.go_back()
         if (event.keyval == Gdk.keyval_from_name('y') and
-            event.state == Gdk.ModifierType.CONTROL_MASK):
+            event.get_state() & Gdk.ModifierType.CONTROL_MASK):
                 self.view.go_forward()
         if (event.keyval == Gdk.keyval_from_name('0') and
-            event.state == Gdk.ModifierType.CONTROL_MASK):
+            event.get_state() & Gdk.ModifierType.CONTROL_MASK):
                 self.view.set_zoom_level(1)
         if (event.keyval == Gdk.unicode_to_keyval(ord('+')) and
-            event.state == Gdk.ModifierType.CONTROL_MASK):
+            event.get_state() & Gdk.ModifierType.CONTROL_MASK):
                 self.view.set_zoom_level(self.view.get_zoom_level() + 0.1)
         if (event.keyval == Gdk.unicode_to_keyval(ord('-')) and
-            event.state == Gdk.ModifierType.CONTROL_MASK):
+            event.get_state() & Gdk.ModifierType.CONTROL_MASK):
                 self.view.set_zoom_level(self.view.get_zoom_level() - 0.1)
         if (event.keyval == Gdk.keyval_from_name('q') and
-            event.state == Gdk.ModifierType.CONTROL_MASK):
+            event.get_state() & Gdk.ModifierType.CONTROL_MASK):
                 Gtk.main_quit()
         if (event.keyval == Gdk.keyval_from_name('l') and
-            event.state == Gdk.ModifierType.CONTROL_MASK):
+            event.get_state() & Gdk.ModifierType.CONTROL_MASK):
                self.addressbar.grab_focus()
         if (event.keyval == Gdk.KEY_Escape and
             self.addressbar.get_text().startswith(':/')):
@@ -451,12 +451,12 @@ class Browser(Gtk.Window):
             self.addressbar.get_text() == self.view.get_uri()):
                self.addressbar.grab_focus()
         if (event.keyval == Gdk.keyval_from_name('f') and
-            event.state == Gdk.ModifierType.CONTROL_MASK):
+            event.get_state() & Gdk.ModifierType.CONTROL_MASK):
             self.addressbar.grab_focus()
             self.addressbar.set_text(':/')
             self.addressbar.set_position(-1)
         if (event.keyval == Gdk.keyval_from_name('k') and
-            event.state == Gdk.ModifierType.CONTROL_MASK):
+            event.get_state() & Gdk.ModifierType.CONTROL_MASK):
             self.searchbar.grab_focus()
 
 if __name__ == "__main__":
