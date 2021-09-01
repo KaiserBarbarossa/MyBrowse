@@ -167,10 +167,16 @@ if len(args.url) > 0:
 else:
         starturl = startpage
 
+class Tab(Gtk.VBox):
+    def __init__(self, *args, **kwargs):
+        super(Tab, self).__init__(*args, **kwargs)
+        
+        self.view = WebKit.WebView.new()
+
+
 class Browser(Gtk.ApplicationWindow):
     def __init__(self, **kargs):
         super().__init__(**kargs, title='MyBrowse')
-
         styleprovider = Gtk.CssProvider()
         try:
             cssfile = f"{theme_dir}{config['General']['theme']}/style.css"
@@ -186,9 +192,8 @@ class Browser(Gtk.ApplicationWindow):
         self.context = WebKit.WebContext.get_default()
         self.context.set_web_process_extensions_directory(extension_dir)
 
-        self.view = WebKit.WebView.new()
-
         self.vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+
         self.vbox.set_spacing(10)
         self.set_icon_name('browser')
 
@@ -231,11 +236,14 @@ class Browser(Gtk.ApplicationWindow):
         self.tabbar.set_scrollable(True)
         self.vbox.add(self.tabbar)
 
+        global current_page
+        current_page = self.tabbar.get_current_page()
+
         self.tabs = []
         self.tabs.append((self.create_tab(), Gtk.Label('Neuer Tab')))
         self.tabbar.insert_page(self.tabs[0][0], self.tabs[0][1], 0)
 
-        self.tabbar.connect("swich-page", self.tab_changed)
+        self.tabbar.connect("switch-page", self.change_title)
 
         self.addressbar = Gtk.Entry()
         self.addressbar.set_text(starturl)
@@ -244,24 +252,25 @@ class Browser(Gtk.ApplicationWindow):
         
         self.addressbar.connect("activate", self.change_url)
 
-        self.findcontroller = WebKit.FindController(web_view=self.view)
-
-        self.sw = Gtk.ScrolledWindow()
-        self.sw.set_child(self.view)
-        self.sw.set_vexpand(True)
-
-        self.vbox.append(self.sw)
-        self.set_child(self.vbox)
-        self.view.load_uri(links(starturl))
-        self.view.connect("notify::uri", self.change_uri)
-        self.view.connect("notify::title", self.change_title)
-        self.view.connect("mouse-target-changed", self.link_hover)
-        self.view.connect("notify::estimated-load-progress", self.progressbar)
         keycont = Gtk.EventControllerKey()
         keycont.connect("key-pressed", self.keybinding)
         self.add_controller(keycont)
         scrollcont = Gtk.EventControllerScroll()
         scrollcont.connect("scroll-begin", self.mousebindings)
+
+        self.findcontroller = WebKit.FindController(web_view=self.tabs[current_page][0].view)
+
+        self.sw = Gtk.ScrolledWindow()
+        self.sw.set_child(self.tabs.[current_page][0].view)
+        self.sw.set_vexpand(True)
+
+        self.vbox.append(self.sw)
+        self.set_child(self.vbox)
+        self.tabs[current_page][0].view.load_uri(links(starturl))
+        self.tabs[current_page][0].view.connect("notify::uri", self.change_uri)
+        self.tabs[current_page][0].view.connect("notify::title", self.change_title)
+        self.tabs[current_page][0].view.connect("mouse-target-changed", self.link_hover)
+        self.tabs[current_page][0].view.connect("notify::estimated-load-progress", self.progressbar)
 
     def str_to_bool(self, string):
         """
@@ -275,7 +284,7 @@ class Browser(Gtk.ApplicationWindow):
         raise ValueError(f'Cannot convert string to bool: {str(string)}')
 
     def configuration(self, *args):
-        settings = self.view.get_settings()
+        settings = self.tabs[current_page][0].view.get_settings()
         try:
             settings.set_property('enable-javascript',
                     self.str_to_bool(config['Browser']['js']))
@@ -311,7 +320,7 @@ class Browser(Gtk.ApplicationWindow):
             with open(conf_file, 'w') as configfile:
                     config.write(configfile)
         try:
-            self.view.set_zoom_level(float(config['General']['zoom']))
+            self.tabs[current_page][0].view.set_zoom_level(float(config['General']['zoom']))
         except KeyError:
             pass
         try:
@@ -320,7 +329,7 @@ class Browser(Gtk.ApplicationWindow):
         except KeyError:
             pass
         try:
-            self.context.set_preferred_languages(config['General']['language'])
+            self.tabs[current_page][0].context.set_preferred_languages(config['General']['language'])
         except KeyError:
             pass
 
@@ -355,37 +364,43 @@ class Browser(Gtk.ApplicationWindow):
         except KeyError:
             pass
 
-
-    def tab_changed(self, tabbar, current_page, index):
-
-
-
     def create_tab(self):
-
+        tab = Tab()
+        tab.view.connect("notify::title", self.change_title)
+        return tab
 
     def close_tab(self, widget):
+        if self.tabbar.get_n_pages() != 1:
+            current = self.tabbar.get_current_page()
+            self.tabbar.remove(self.tabs.pop(current)[0])
 
     def new_tab(self, widget):
+        current = self.tabbar.get_current_page()
+        page_tuple = (self.create_tab(), Gtk.Label(''))
+        self.tabs.insert(current_page + 1, page_tuple)
+        self.tabbar.insert_page(page_tuple[0], page_tuple[1], current + 1)
+        self.tabbar.set_current_page(current + 1)
 
 
     def change_url(self, widget):
         url = self.addressbar.get_text()
         if url in (':back', ':undo', ':u'):
-            self.view.go_back()
+            self.tabs[current_page][0].view.go_back()
         elif url in (':forward', ':redo', ':r'):
-            self.view.go_forward()
+            self.tabs[current_page][0].view.go_forward()
         elif url in (':reload', ':rl'):
-            self.view.reload()
+            self.tabs[current_page][0].view.reload()
         elif url.startswith(':/'):
             self.search_page(url.split(':/', 1)[1])
         else:
             try:
-                self.view.load_uri(links(url))
+                self.tabs[current_page][0].view.load_uri(links(url))
             except TypeError:
                 pass
 
+
     def change_title(self, widget, data, *arg):
-        title = widget.get_title()
+        title = self.tabs[current_page][0].view.get_title()
         if title == '':
                 self.set_title('MyBrowse')
         else:
@@ -394,7 +409,7 @@ class Browser(Gtk.ApplicationWindow):
     def change_uri(self, widget, data, *arg):
         uri = widget.get_uri()
         try:
-            self.view.load_uri(links(uri))
+            self.tabs[current_page][0].view.load_uri(links(uri))
             self.addressbar.set_text(uri)
         except TypeError:
             pass
@@ -403,26 +418,26 @@ class Browser(Gtk.ApplicationWindow):
         history.close()
 
     def go_back(self, widget):
-        self.view.go_back()
+        self.tabs[current_page][0].view.go_back()
 
     def go_forward(self, widget):
-        self.view.go_forward()
+        self.tabs[current_page][0].view.go_forward()
 
     def go_reload(self, widget):
-        self.view.reload()
+        self.tabs[current_page][0].view.reload()
 
     def go_home(self, widget):
         self.addressbar.set_text(startpage)
-        self.view.load_uri(startpage)
+        self.tabs[current_page][0].view.load_uri(startpage)
 
     def search(self, searchbar):
         searchstring = self.searchbar.get_text()
-        self.view.load_uri(f'{links(searchengine)}'
+        self.tabs[current_page][0].view.load_uri(f'{links(searchengine)}'
                            f'{GLib.uri_escape_string(searchstring,"", True)}')
 
     def set_bookmark(self, widget):
         url = self.addressbar.get_text()
-        title = self.view.get_title()
+        title = self.tabs[current_page][0].view.get_title()
         bm_file_path = f'{conf_dir}bookmarks.html'
         bm_file =  open(bm_file_path, 'a+')
         if open(bm_file_path, 'r').read() == "":
@@ -443,7 +458,7 @@ class Browser(Gtk.ApplicationWindow):
         for userscript in Path(userscript_dir).iterdir():
             if userscript.is_file() and Path(userscript).suffix == '.js':
                 script_content = open(userscript, 'r').read()
-                self.view.evaluate_javascript(script_content, -1)
+                self.tabs[current_page][0].view.evaluate_javascript(script_content, -1)
 
     def progressbar(self, widget, data, *arg):
         amount = widget.get_estimated_load_progress()
@@ -451,7 +466,7 @@ class Browser(Gtk.ApplicationWindow):
             self.addressbar.set_progress_fraction(amount)
         else:
             self.addressbar.set_progress_fraction(0)
-            self.view.grab_focus()
+            self.tabs[current_page][0].view.grab_focus()
             self.run_userscripts()
 
     def search_page(self, *args):
@@ -464,37 +479,37 @@ class Browser(Gtk.ApplicationWindow):
         if event.get_state() & Gdk.ModifierType.CONTROL_MASK:
             scrolldir = event.get_scroll_deltas()[2]
             if scrolldir > 0:
-                self.view.set_zoom_level(self.view.get_zoom_level() - 0.1)
+                self.tabs[current_page][0].view.set_zoom_level(self.tabs[current_page][0].view.get_zoom_level() - 0.1)
             elif scrolldir < 0:
-                self.view.set_zoom_level(self.view.get_zoom_level() + 0.1)
+                self.tabs[current_page][0].view.set_zoom_level(self.tabs[current_page][0].view.get_zoom_level() + 0.1)
 
     def keybinding(self, eventcontroller, keyval, keycode, state):
         if (keyval == Gdk.keyval_from_name('d') and
             state & Gdk.ModifierType.CONTROL_MASK):
-                self.set_bookmark(self.view)
+                self.set_bookmark(self.tabs[current_page][0].view)
         if (keyval == Gdk.keyval_from_name('r') and
             state & Gdk.ModifierType.CONTROL_MASK):
-                self.view.reload()
+                self.tabs[current_page][0].view.reload()
         if keyval == Gdk.KEY_F5:
-                self.view.reload()
+                self.tabs[current_page][0].view.reload()
         if (keyval == Gdk.KEY_F5 and
             state & Gdk.ModifierType.SHIFT_MASK):
-                self.view.reload_bypass_cache()
+                self.tabs[current_page][0].view.reload_bypass_cache()
         if (keyval == Gdk.keyval_from_name('z') and
             state & Gdk.ModifierType.CONTROL_MASK):
-                self.view.go_back()
+                self.tabs[current_page][0].view.go_back()
         if (keyval == Gdk.keyval_from_name('y') and
             state & Gdk.ModifierType.CONTROL_MASK):
-                self.view.go_forward()
+                self.tabs[current_page][0].view.go_forward()
         if (keyval == Gdk.keyval_from_name('0') and
             state & Gdk.ModifierType.CONTROL_MASK):
-                self.view.set_zoom_level(1)
+                self.tabs[current_page][0].view.set_zoom_level(1)
         if (keyval == Gdk.unicode_to_keyval(ord('+')) and
             state & Gdk.ModifierType.CONTROL_MASK):
-                self.view.set_zoom_level(self.view.get_zoom_level() + 0.1)
+                self.tabs[current_page][0].view.set_zoom_level(self.tabs[current_page][0].view.get_zoom_level() + 0.1)
         if (keyval == Gdk.unicode_to_keyval(ord('-')) and
             state & Gdk.ModifierType.CONTROL_MASK):
-                self.view.set_zoom_level(self.view.get_zoom_level() - 0.1)
+                self.tabs[current_page][0].view.set_zoom_level(self.tabs[current_page][0].view.get_zoom_level() - 0.1)
         if (keyval == Gdk.keyval_from_name('q') and
             state & Gdk.ModifierType.CONTROL_MASK):
                 self.close()
@@ -505,11 +520,11 @@ class Browser(Gtk.ApplicationWindow):
             self.addressbar.get_text().startswith(':/')):
                 self.findcontroller.search_finish()
         if (keyval == Gdk.KEY_Escape and
-            (self.addressbar.get_text() is not self.view.get_uri()
+            (self.addressbar.get_text() is not self.tabs[current_page][0].view.get_uri()
             or self.addressbar.get_text().startswith(':/'))):
-            self.addressbar.set_text(self.view.get_uri())
+            self.addressbar.set_text(self.tabs[current_page][0].view.get_uri())
         if (keyval == Gdk.KEY_Escape and
-            self.addressbar.get_text() == self.view.get_uri()):
+            self.addressbar.get_text() == self.tabs[current_page][0].view.get_uri()):
                self.addressbar.grab_focus()
         if (keyval == Gdk.keyval_from_name('f') and
             state & Gdk.ModifierType.CONTROL_MASK):
