@@ -11,6 +11,14 @@ MyBrowse is a simple webbrowser written in Python3 using GTK and WebKit.
 
 ## Installation
 
+### PyPI
+
+The command
+
+    pip install --user -U mybrowse
+
+will install MyBrowse using pip inside your Home-Directory and can be used to upgrade it too.
+
 ### Debian/Ubuntu
 
 Installation on Ubuntu based distributions is possible with a PPA:
