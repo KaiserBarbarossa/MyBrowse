@@ -223,6 +223,7 @@ class Browser(Gtk.Window):
         self.view.connect("mouse-target-changed", self.link_hover)
         self.view.connect("notify::estimated-load-progress", self.progressbar)
         self.connect("key-press-event", self.keybinding)
+        self.connect("scroll-event", self.mousebindings)
 
         # Load configuration on startup
         self.configuration()
@@ -406,6 +407,14 @@ class Browser(Gtk.Window):
         if not keyword == "":
             self.findcontroller.search(keyword, WebKit2.FindOptions.CASE_INSENSITIVE,
                     WebKit2.FindOptions.WRAP_AROUND)
+
+    def mousebindings(self, widget, event):
+        if event.get_state() & Gdk.ModifierType.CONTROL_MASK:
+            scrolldir = event.get_scroll_deltas()[2]
+            if scrolldir > 0:
+                self.view.set_zoom_level(self.view.get_zoom_level() - 0.1)
+            elif scrolldir < 0:
+                self.view.set_zoom_level(self.view.get_zoom_level() + 0.1)
 
     def keybinding(self, widget, event):
         if (event.keyval == Gdk.keyval_from_name('d') and
