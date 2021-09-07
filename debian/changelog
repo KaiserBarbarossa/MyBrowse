@@ -1,3 +1,31 @@
+mybrowse (0.5-0ubuntu1) impish; urgency=medium
+
+   * Split URLs starting with :o/:open/:e just once
+   * Migrate to argparse library instead of own parser
+   * Allow different basedirs using -B/--basedir argument or the
+     $MYBROWSE_HOME environment variable
+   * Reset addressbar text if it isn’t the URL and Escape is pressed
+   * Do only show hover link in addressbar if no command is typed
+   * Use pybuild in build process
+   * Remove highlights if addressbar has focus, Escape is pressed and the text
+     inside the addressbar starts with ':/'
+   * Use utf8 in bookmark file
+   * Implement theming using CSS
+   * Add ctrl+k as keybinding to focus searchbar
+   * Reload configuration if uri has changed or a command is executed
+   * Add --temp-dir argument
+   * Add tooltip
+   * Add configuration option to disable javascript
+   * Escape search input (see https://github.com/vain/lariza/issues/47)
+   * Use F5 to reload
+   * Add Shift+F5 as keybinding to reload and bypass cache
+   * Use Path.expanduser() instead of manual parsing
+   * Use a system wide configuration if user configuration doesn’t exist
+   * Test for modifier keys correctly (Closes #11)
+   * Allow zooming using mouse wheel
+
+ -- tuxifreund <kaiser.barbarossa@yandex.com>  Thu, 7 Sep 2021 19:43:50 +0200
+
 mybrowse (0.4-0ubuntu1) impish; urgency=medium
 
    * "Link-Logic" is moved into seperate function

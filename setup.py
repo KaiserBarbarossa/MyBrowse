@@ -24,7 +24,7 @@ with open('README.md', 'r', encoding='utf-8') as fh:
 
 setuptools.setup(
     name='mybrowse',
-    version='0.4',
+    version='0.5',
     author='tuxifreund',
     author_email='kaiser.barbarossa@yandex.com',
     description='MyBrowse is a simple browser written in Python3 using WebKit and GTK',
