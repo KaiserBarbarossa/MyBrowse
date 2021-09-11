@@ -7,6 +7,7 @@ MyBrowse is a simple webbrowser written in Python3 using GTK and WebKit.
 
 ## Support
 
+ * write a mail to the [mailing list](https://sourceforge.net/projects/mybrowse-web/lists/mybrowse-web-user) at mybrowse-web-user@lists.sourceforge.net
  * #mybrowse on [irc.libera.chat](https://libera.chat) ([webchat](https://web.libera.chat/?channel=#mybrowse), [via Matrix](https://matrix.to/#/#mybrowse:libera.chat))
 
 ## Installation
