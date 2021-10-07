@@ -134,6 +134,18 @@ def links(url):
         else:
             href = url
     try:
+        try:
+            host = GLib.Uri.get_host(GLib.uri_parse(href, GLib.UriFlags.ENCODED))
+            for key in config['Redirects']:
+                try:
+                    split = GLib.uri_split(href, GLib.UriFlags.ENCODED)
+                    href = GLib.uri_join(GLib.UriFlags.ENCODED, split[0],
+                        split[1], config['Redirects'][host], split[3], split[4],
+                        split[5], split[6])
+                except KeyError:
+                    href = url
+        except KeyError:
+            href = href
         return href
     except UnboundLocalError:
         pass
