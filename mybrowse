@@ -217,7 +217,7 @@ class Browser(Gtk.Window):
 
         self.vbox.pack_start(self.sw, True, True, 0)
         self.add(self.vbox)
-        self.view.load_uri(starturl)
+        self.view.load_uri(links(starturl))
         self.view.connect("notify::uri", self.change_uri)
         self.view.connect("notify::title", self.change_title)
         self.view.connect("mouse-target-changed", self.link_hover)
