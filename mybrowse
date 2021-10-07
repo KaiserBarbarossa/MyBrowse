@@ -146,6 +146,19 @@ def links(url):
                     href = url
         except KeyError:
             href = href
+        # Use Punycode
+        try:
+            if config['Browser']['ascii-urls'] == 'False':
+                pass
+            else:
+                split = GLib.uri_split(href, GLib.UriFlags.ENCODED)
+                href = GLib.uri_join(GLib.UriFlags.ENCODED, split[0], split[1],
+                        GLib.hostname_to_ascii(split[2]), split[3], split[4],
+                        split[5], split[6])
+        except KeyError:
+            config ['Browser']['ascii-urls'] = 'True'
+            with open(conf_file, 'w') as configfile:
+                config.write(configfile)
         return href
     except UnboundLocalError:
         pass
