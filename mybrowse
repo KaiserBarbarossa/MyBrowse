@@ -143,9 +143,9 @@ def links(url):
                         split[1], config['Redirects'][host], split[3], split[4],
                         split[5], split[6])
                 except KeyError:
-                    href = url
+                    pass
         except KeyError:
-            href = href
+            pass
         # Use Punycode
         try:
             if config['Browser']['ascii-urls'] == 'False':
