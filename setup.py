@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-#Copyright (C) 2021  tuxifreund <kaiser.barbarossa@yandex.com>
+#Copyright (C) 2021-2022  tuxifreund <kaiser.barbarossa@yandex.com>
 #
 #This file is part of MyBrowse.
 #
