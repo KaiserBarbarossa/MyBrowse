@@ -64,19 +64,16 @@ for (directory, description) in dir_tuple:
 
 conf_file = f"{basedir}/.config/mybrowse/mybrowse.cfg"
 
+config = configparser.ConfigParser()
+
 if not Path(conf_file).exists():
         print('No configuration found')
-        with open(conf_file, 'w') as f:
-                f.write('''
-[General]
-home = https://lite.duckduckgo.com
-search = https://duckduckgo.com/?q=
+        config['General'] = {'home': 'https://lite.duckduckgo.com',
+                             'search': 'https://duckduckgo.com/?q='}
+        config['Browser'] = {}
+        with open(conf_file, 'w'):
+                config.write(conf_file)
 
-[Browser]
-''')
-                f.close()
-
-config = configparser.ConfigParser()
 config.read(['/etc/mybrowse/mybrowse.cfg', conf_file])
 searchengine = config['General']['search']
 startpage = config['General']['home']
