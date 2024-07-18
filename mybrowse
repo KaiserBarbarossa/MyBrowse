@@ -177,9 +177,9 @@ class Browser(Gtk.ApplicationWindow):
             pass
         if Path(f'{conf_dir}style.css').exists():
             styleprovider.load_from_path(f"{conf_dir}style.css")
-        style = self.get_style_context()
-#        screen = Gdk.Screen.get_default()
-#        style.add_provider_for_screen(screen, styleprovider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+        screen = Gdk.Display.get_default()
+        Gtk.StyleContext.add_provider_for_display(screen, styleprovider,
+                                    Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 
         self.context = WebKit.WebContext.get_default()
         self.context.set_web_process_extensions_directory(extension_dir)
