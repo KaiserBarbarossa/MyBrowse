@@ -187,7 +187,6 @@ class Browser(Gtk.ApplicationWindow):
         self.view = WebKit.WebView.new()
 
         self.vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        self.vbox.expand = True
         self.vbox.set_spacing(10)
         self.set_icon_name('browser')
 
@@ -231,6 +230,7 @@ class Browser(Gtk.ApplicationWindow):
 
         self.sw = Gtk.ScrolledWindow()
         self.sw.set_child(self.view)
+        self.sw.set_vexpand(True)
 
         self.vbox.append(self.sw)
         self.set_child(self.vbox)
