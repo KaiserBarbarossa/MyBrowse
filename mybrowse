@@ -240,8 +240,8 @@ class Browser(Gtk.ApplicationWindow):
         self.view.connect("mouse-target-changed", self.link_hover)
         self.view.connect("notify::estimated-load-progress", self.progressbar)
         keycont = Gtk.EventControllerKey()
-        keycont.connect("key-pressed", self.keybinding, self)
-        self.add_controller(keycont)
+        keycont.connect("key-pressed", self.keybinding)
+        self.view.add_controller(keycont)
         scrollcont = Gtk.EventControllerScroll()
         scrollcont.connect("scroll-begin", self.mousebindings)
 
@@ -436,56 +436,56 @@ class Browser(Gtk.ApplicationWindow):
             elif scrolldir < 0:
                 self.view.set_zoom_level(self.view.get_zoom_level() + 0.1)
 
-    def keybinding(self, widget, event):
-        if (event.keyval == Gdk.keyval_from_name('d') and
-            event.get_state() & Gdk.ModifierType.CONTROL_MASK):
+    def keybinding(self, eventcontroller, keyval, keycode, state):
+        if (keyval == Gdk.keyval_from_name('d') and
+            state & Gdk.ModifierType.CONTROL_MASK):
                 self.set_bookmark(self.view)
-        if (event.keyval == Gdk.keyval_from_name('r') and
-            event.get_state() & Gdk.ModifierType.CONTROL_MASK):
+        if (keyval == Gdk.keyval_from_name('r') and
+            state & Gdk.ModifierType.CONTROL_MASK):
                 self.view.reload()
-        if event.keyval == Gdk.KEY_F5:
+        if keyval == Gdk.KEY_F5:
                 self.view.reload()
-        if (event.keyval == Gdk.KEY_F5 and
-            event.get_state() & Gdk.ModifierType.SHIFT_MASK):
+        if (keyval == Gdk.KEY_F5 and
+            state & Gdk.ModifierType.SHIFT_MASK):
                 self.view.reload_bypass_cache()
-        if (event.keyval == Gdk.keyval_from_name('z') and
-            event.get_state() & Gdk.ModifierType.CONTROL_MASK):
+        if (keyval == Gdk.keyval_from_name('z') and
+            state & Gdk.ModifierType.CONTROL_MASK):
                 self.view.go_back()
-        if (event.keyval == Gdk.keyval_from_name('y') and
-            event.get_state() & Gdk.ModifierType.CONTROL_MASK):
+        if (keyval == Gdk.keyval_from_name('y') and
+            state & Gdk.ModifierType.CONTROL_MASK):
                 self.view.go_forward()
-        if (event.keyval == Gdk.keyval_from_name('0') and
-            event.get_state() & Gdk.ModifierType.CONTROL_MASK):
+        if (keyval == Gdk.keyval_from_name('0') and
+            state & Gdk.ModifierType.CONTROL_MASK):
                 self.view.set_zoom_level(1)
-        if (event.keyval == Gdk.unicode_to_keyval(ord('+')) and
-            event.get_state() & Gdk.ModifierType.CONTROL_MASK):
+        if (keyval == Gdk.unicode_to_keyval(ord('+')) and
+            state & Gdk.ModifierType.CONTROL_MASK):
                 self.view.set_zoom_level(self.view.get_zoom_level() + 0.1)
-        if (event.keyval == Gdk.unicode_to_keyval(ord('-')) and
-            event.get_state() & Gdk.ModifierType.CONTROL_MASK):
+        if (keyval == Gdk.unicode_to_keyval(ord('-')) and
+            state & Gdk.ModifierType.CONTROL_MASK):
                 self.view.set_zoom_level(self.view.get_zoom_level() - 0.1)
-        if (event.keyval == Gdk.keyval_from_name('q') and
-            event.get_state() & Gdk.ModifierType.CONTROL_MASK):
+        if (keyval == Gdk.keyval_from_name('q') and
+            state & Gdk.ModifierType.CONTROL_MASK):
                 self.close()
-        if (event.keyval == Gdk.keyval_from_name('l') and
-            event.get_state() & Gdk.ModifierType.CONTROL_MASK):
+        if (keyval == Gdk.keyval_from_name('l') and
+            state & Gdk.ModifierType.CONTROL_MASK):
                self.addressbar.grab_focus()
-        if (event.keyval == Gdk.KEY_Escape and
+        if (keyval == Gdk.KEY_Escape and
             self.addressbar.get_text().startswith(':/')):
                 self.findcontroller.search_finish()
-        if (event.keyval == Gdk.KEY_Escape and
+        if (keyval == Gdk.KEY_Escape and
             (self.addressbar.get_text() is not self.view.get_uri()
             or self.addressbar.get_text().startswith(':/'))):
             self.addressbar.set_text(self.view.get_uri())
-        if (event.keyval == Gdk.KEY_Escape and
+        if (keyval == Gdk.KEY_Escape and
             self.addressbar.get_text() == self.view.get_uri()):
                self.addressbar.grab_focus()
-        if (event.keyval == Gdk.keyval_from_name('f') and
-            event.get_state() & Gdk.ModifierType.CONTROL_MASK):
+        if (keyval == Gdk.keyval_from_name('f') and
+            state & Gdk.ModifierType.CONTROL_MASK):
             self.addressbar.grab_focus()
             self.addressbar.set_text(':/')
             self.addressbar.set_position(-1)
-        if (event.keyval == Gdk.keyval_from_name('k') and
-            event.get_state() & Gdk.ModifierType.CONTROL_MASK):
+        if (keyval == Gdk.keyval_from_name('k') and
+            state & Gdk.ModifierType.CONTROL_MASK):
             self.searchbar.grab_focus()
 
 def on_activate(app):
