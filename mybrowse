@@ -71,8 +71,8 @@ if not Path(conf_file).exists():
         config['General'] = {'home': 'https://lite.duckduckgo.com',
                              'search': 'https://duckduckgo.com/?q='}
         config['Browser'] = {}
-        with open(conf_file, 'w'):
-                config.write(conf_file)
+        with open(conf_file, 'w') as configfile:
+                config.write(configfile)
 
 config.read(['/etc/mybrowse/mybrowse.cfg', conf_file])
 searchengine = config['General']['search']
@@ -153,7 +153,7 @@ def links(url):
                         GLib.hostname_to_ascii(split[2]), split[3], split[4],
                         split[5], split[6])
         except KeyError:
-            config ['Browser']['ascii-urls'] = 'True'
+            config['Browser']['ascii-urls'] = 'True'
             with open(conf_file, 'w') as configfile:
                 config.write(configfile)
         return href
