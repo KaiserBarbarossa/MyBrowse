@@ -307,8 +307,6 @@ class Browser(Gtk.ApplicationWindow):
             pass
 
         # Cookie accept settings
-        # FIXME
-        # CookieManager causes segmentation fault during Gtk4 conversion
         self.network_session = WebKit.NetworkSession.new_ephemeral()
         self.cookie_manager = self.network_session.get_cookie_manager()
         try:
