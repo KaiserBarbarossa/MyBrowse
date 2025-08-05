@@ -309,34 +309,35 @@ class Browser(Gtk.ApplicationWindow):
         # Cookie accept settings
         # FIXME
         # CookieManager causes segmentation fault during Gtk4 conversion
-        # self.cookie_manager = WebKit.CookieManager()
-        # try:
-        #     if config['Browser']['cookies'] == 'ALWAYS':
-        #         self.cookie_manager.set_accept_policy(WebKit.CookieAcceptPolicy.ALWAYS)
-        #     elif config['Browser']['cookies'] == 'NO_THIRD_PARTY':
-        #         self.cookie_manager.set_accept_policy(WebKit.CookieAcceptPolicy.NO_THIRD_PARTY)
-        #     elif config['Browser']['cookies'] == 'NEVER':
-        #         self.cookie_manager.set_accept_policy(WebKit.CookieAcceptPolicy.NEVER)
-        # except KeyError:
-        #     self.cookie_manager.set_accept_policy(WebKit.CookieAcceptPolicy.NO_THIRD_PARTY)
-        #     config['Browser']['cookies'] = 'NO_THIRD_PARTY'
-        #     with open(conf_file, 'w') as configfile:
-        #             config.write(configfile)
+        self.network_session = WebKit.NetworkSession.new_ephemeral()
+        self.cookie_manager = self.network_session.get_cookie_manager()
+        try:
+            if config['Browser']['cookies'] == 'ALWAYS':
+                self.cookie_manager.set_accept_policy(WebKit.CookieAcceptPolicy.ALWAYS)
+            elif config['Browser']['cookies'] == 'NO_THIRD_PARTY':
+                self.cookie_manager.set_accept_policy(WebKit.CookieAcceptPolicy.NO_THIRD_PARTY)
+            elif config['Browser']['cookies'] == 'NEVER':
+                self.cookie_manager.set_accept_policy(WebKit.CookieAcceptPolicy.NEVER)
+        except KeyError:
+            self.cookie_manager.set_accept_policy(WebKit.CookieAcceptPolicy.NO_THIRD_PARTY)
+            config['Browser']['cookies'] = 'NO_THIRD_PARTY'
+            with open(conf_file, 'w') as configfile:
+                    config.write(configfile)
 
-        # # Persistent Cookie storage
-        # try:
-        #     if config['Browser']['persistent-cookies'] == 'True':
-        #         storage = WebKit.CookiePersistentStorage.TEXT
-        #         try:
-        #             self.cookie_manager.set_persistent_storage(str(Path(
-        #                 config['Browser']['cookiepath']).expanduser()), storage)
-        #         except KeyError:
-        #             self.cookie_manager.set_persistent_storage('/tmp/mybrowse-cookies.txt', storage)
-        #             config['Browser']['cookiepath'] = '/tmp/mybrowse-cookies.txt'
-        #             with open(conf_file, 'w') as configfile:
-        #                 config.write(configfile)
-        # except KeyError:
-        #     pass
+        # Persistent Cookie storage
+        try:
+            if config['Browser']['persistent-cookies'] == 'True':
+                storage = WebKit.CookiePersistentStorage.TEXT
+                try:
+                    self.cookie_manager.set_persistent_storage(str(Path(
+                        config['Browser']['cookiepath']).expanduser()), storage)
+                except KeyError:
+                    self.cookie_manager.set_persistent_storage('/tmp/mybrowse-cookies.txt', storage)
+                    config['Browser']['cookiepath'] = '/tmp/mybrowse-cookies.txt'
+                    with open(conf_file, 'w') as configfile:
+                        config.write(configfile)
+        except KeyError:
+            pass
 
 
     def change_url(self, widget):
