@@ -245,9 +245,6 @@ class Browser(Gtk.ApplicationWindow):
         scrollcont = Gtk.EventControllerScroll()
         scrollcont.connect("scroll-begin", self.mousebindings)
 
-        # Load configuration on startup
-        self.configuration()
-
     def str_to_bool(self, string):
         """
         Convert a string to its boolean. Every other string than "True" and "False"
@@ -357,7 +354,6 @@ class Browser(Gtk.ApplicationWindow):
                 self.view.load_uri(links(url))
             except TypeError:
                 pass
-        self.configuration()
 
     def change_title(self, widget, data, *arg):
         title = widget.get_title()
@@ -490,6 +486,7 @@ class Browser(Gtk.ApplicationWindow):
 
 def on_activate(app):
     win = Browser(application=app)
+    win.configuration()
     try:
         win.set_default_size(float(config['Browser']['width']),
                              float(config['Browser']['height']))
