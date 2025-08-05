@@ -241,7 +241,7 @@ class Browser(Gtk.ApplicationWindow):
         self.view.connect("notify::estimated-load-progress", self.progressbar)
         keycont = Gtk.EventControllerKey()
         keycont.connect("key-pressed", self.keybinding)
-        self.view.add_controller(keycont)
+        self.add_controller(keycont)
         scrollcont = Gtk.EventControllerScroll()
         scrollcont.connect("scroll-begin", self.mousebindings)
 
