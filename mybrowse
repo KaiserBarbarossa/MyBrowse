@@ -307,7 +307,7 @@ class Browser(Gtk.ApplicationWindow):
             pass
 
         # Cookie accept settings
-        self.network_session = WebKit.NetworkSession.new_ephemeral()
+        self.network_session = WebKit.NetworkSession.new()
         self.cookie_manager = self.network_session.get_cookie_manager()
         try:
             if config['Browser']['cookies'] == 'ALWAYS':
