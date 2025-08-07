@@ -44,7 +44,7 @@ setuptools.setup(
         'Environment :: X11 Applications :: GTK',
     ],
     scripts=['mybrowse'],
-    python_requires='>=3.6',
+    python_requires='>=3.9',
     install_requires=[
         'PyGObject'
     ],

@@ -22,10 +22,10 @@ import argparse
 import os
 import tempfile
 import gi
-gi.require_version('WebKit2', '4.0')
-gi.require_version('Gtk', '3.0')
-gi.require_version('Gdk', '3.0')
-from gi.repository import Gtk, WebKit2, Gdk, GLib
+gi.require_version('WebKit', '6.0')
+gi.require_version('Gtk', '4.0')
+gi.require_version('Gdk', '4.0')
+from gi.repository import Gtk, Gdk, GLib, WebKit
 
 argparser = argparse.ArgumentParser(description='A simple and lightweight browser written in Python.')
 argparser.add_argument('url', help='URL/command to open/execute at startup', nargs='*')
@@ -71,8 +71,8 @@ if not Path(conf_file).exists():
         config['General'] = {'home': 'https://lite.duckduckgo.com',
                              'search': 'https://duckduckgo.com/?q='}
         config['Browser'] = {}
-        with open(conf_file, 'w'):
-                config.write(conf_file)
+        with open(conf_file, 'w') as configfile:
+                config.write(configfile)
 
 config.read(['/etc/mybrowse/mybrowse.cfg', conf_file])
 searchengine = config['General']['search']
@@ -125,7 +125,7 @@ def links(url):
         elif url.startswith(':open') or url.startswith(':o') or url.startswith(':e'):
            href = links(url.split(' ', 1)[1])
         elif url.startswith(':q'):
-            Gtk.main_quit()
+            app.quit()
         elif url.startswith(':set'):
             editconfig(url.split(':set ', 1)[1])
         else:
@@ -153,7 +153,7 @@ def links(url):
                         GLib.hostname_to_ascii(split[2]), split[3], split[4],
                         split[5], split[6])
         except KeyError:
-            config ['Browser']['ascii-urls'] = 'True'
+            config['Browser']['ascii-urls'] = 'True'
             with open(conf_file, 'w') as configfile:
                 config.write(configfile)
         return href
@@ -165,9 +165,9 @@ if len(args.url) > 0:
 else:
         starturl = startpage
 
-class Browser(Gtk.Window):
-    def __init__(self):
-        Gtk.Window.__init__(self, title='MyBrowse')
+class Browser(Gtk.ApplicationWindow):
+    def __init__(self, **kargs):
+        super().__init__(**kargs, title='MyBrowse')
 
         styleprovider = Gtk.CssProvider()
         try:
@@ -177,45 +177,39 @@ class Browser(Gtk.Window):
             pass
         if Path(f'{conf_dir}style.css').exists():
             styleprovider.load_from_path(f"{conf_dir}style.css")
-        style = self.get_style_context()
-        screen = Gdk.Screen.get_default()
-        style.add_provider_for_screen(screen, styleprovider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+        screen = Gdk.Display.get_default()
+        Gtk.StyleContext.add_provider_for_display(screen, styleprovider,
+                                    Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 
-        self.context = WebKit2.WebContext.get_default()
-        self.context.set_web_extensions_directory(extension_dir)
+        self.context = WebKit.WebContext.get_default()
+        self.context.set_web_process_extensions_directory(extension_dir)
 
-        self.view = WebKit2.WebView.new_with_context(self.context)
+        self.view = WebKit.WebView.new()
 
-        self.vbox = Gtk.Box(orientation=Gtk.STYLE_CLASS_VERTICAL)
-        self.vbox.expand = True
+        self.vbox = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self.vbox.set_spacing(10)
         self.set_icon_name('browser')
 
-        self.menu = Gtk.Box(orientation=Gtk.STYLE_CLASS_HORIZONTAL)
+        self.menu = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
         self.menu.expand = False
-        self.back = Gtk.Button(tooltip_text='One page back (Ctrl + Z)')
-        self.back_arrow = Gtk.Image.new_from_icon_name('go-previous', Gtk.IconSize.SMALL_TOOLBAR)
-        self.back.add(self.back_arrow)
-        self.menu.add(self.back)
-        self.forward = Gtk.Button(tooltip_text='One page forward (Ctrl + Y)')
-        self.forward_arrow = Gtk.Image.new_from_icon_name('go-next', Gtk.IconSize.SMALL_TOOLBAR)
-        self.forward.add(self.forward_arrow)
-        self.menu.add(self.forward)
-        self.reload = Gtk.Button(tooltip_text='Reload current page (Ctrl + R)')
-        self.reload_arrow = Gtk.Image.new_from_icon_name('view-refresh', Gtk.IconSize.SMALL_TOOLBAR)
-        self.reload.add(self.reload_arrow)
-        self.menu.add(self.reload)
-        self.home = Gtk.Button(tooltip_text='Open home page')
-        self.home_arrow = Gtk.Image.new_from_icon_name('go-home', Gtk.IconSize.SMALL_TOOLBAR)
-        self.home.add(self.home_arrow)
-        self.menu.add(self.home)
-        self.bookmarker = Gtk.Button(tooltip_text='Bookmark current page (Ctrl + B)')
-        self.bookmarker_symbol = Gtk.Image.new_from_icon_name('bookmark-new', Gtk.IconSize.SMALL_TOOLBAR)
-        self.bookmarker.add(self.bookmarker_symbol)
-        self.menu.add(self.bookmarker)
+        self.back = Gtk.Button.new_from_icon_name('go-previous')
+        self.back.set_tooltip_text('One page back (Ctrl + Z)')
+        self.menu.append(self.back)
+        self.forward = Gtk.Button.new_from_icon_name('go-next')
+        self.forward.set_tooltip_text('One page forward (Ctrl + Y)')
+        self.menu.append(self.forward)
+        self.reload = Gtk.Button.new_from_icon_name('view-refresh')
+        self.reload.set_tooltip_text('Reload current page (Ctrl + R)')
+        self.menu.append(self.reload)
+        self.home = Gtk.Button.new_from_icon_name('go-home')
+        self.home.set_tooltip_text('Open home page')
+        self.menu.append(self.home)
+        self.bookmarker = Gtk.Button.new_from_icon_name('bookmark-new')
+        self.bookmarker.set_tooltip_text('Bookmark current page (Ctrl + B)')
+        self.menu.append(self.bookmarker)
         self.searchbar = Gtk.SearchEntry()
         self.searchbar.set_name('searchbar')
-        self.menu.add(self.searchbar)
+        self.menu.append(self.searchbar)
         
         self.back.connect("clicked", self.go_back)
         self.forward.connect("clicked", self.go_forward)
@@ -223,32 +217,33 @@ class Browser(Gtk.Window):
         self.home.connect("clicked", self.go_home)
         self.searchbar.connect("activate", self.search)
         self.bookmarker.connect("clicked", self.set_bookmark)
-        self.vbox.add(self.menu)
+        self.vbox.append(self.menu)
 
         self.addressbar = Gtk.Entry()
         self.addressbar.set_text(starturl)
         self.addressbar.set_name('addressbar')
-        self.vbox.add(self.addressbar)
+        self.vbox.append(self.addressbar)
         
         self.addressbar.connect("activate", self.change_url)
 
-        self.findcontroller = WebKit2.FindController(web_view=self.view)
+        self.findcontroller = WebKit.FindController(web_view=self.view)
 
         self.sw = Gtk.ScrolledWindow()
-        self.sw.add(self.view)
+        self.sw.set_child(self.view)
+        self.sw.set_vexpand(True)
 
-        self.vbox.pack_start(self.sw, True, True, 0)
-        self.add(self.vbox)
+        self.vbox.append(self.sw)
+        self.set_child(self.vbox)
         self.view.load_uri(links(starturl))
         self.view.connect("notify::uri", self.change_uri)
         self.view.connect("notify::title", self.change_title)
         self.view.connect("mouse-target-changed", self.link_hover)
         self.view.connect("notify::estimated-load-progress", self.progressbar)
-        self.connect("key-press-event", self.keybinding)
-        self.connect("scroll-event", self.mousebindings)
-
-        # Load configuration on startup
-        self.configuration()
+        keycont = Gtk.EventControllerKey()
+        keycont.connect("key-pressed", self.keybinding)
+        self.add_controller(keycont)
+        scrollcont = Gtk.EventControllerScroll()
+        scrollcont.connect("scroll-begin", self.mousebindings)
 
     def str_to_bool(self, string):
         """
@@ -312,17 +307,17 @@ class Browser(Gtk.Window):
             pass
 
         # Cookie accept settings
-        self.cookie_manager = self.context.get_cookie_manager()
+        self.network_session = WebKit.NetworkSession.new()
+        self.cookie_manager = self.network_session.get_cookie_manager()
         try:
             if config['Browser']['cookies'] == 'ALWAYS':
-                self.cookie_manager.set_accept_policy(WebKit2.CookieAcceptPolicy.ALWAYS)
+                self.cookie_manager.set_accept_policy(WebKit.CookieAcceptPolicy.ALWAYS)
             elif config['Browser']['cookies'] == 'NO_THIRD_PARTY':
-                self.cookie_manager.set_accept_policy(WebKit2.CookieAcceptPolicy.NO_THIRD_PARTY)
+                self.cookie_manager.set_accept_policy(WebKit.CookieAcceptPolicy.NO_THIRD_PARTY)
             elif config['Browser']['cookies'] == 'NEVER':
-                self.cookie_manager.set_accept_policy(WebKit2.CookieAcceptPolicy.NEVER)
+                self.cookie_manager.set_accept_policy(WebKit.CookieAcceptPolicy.NEVER)
         except KeyError:
-            self.cookie_manager.set_accept_policy(WebKit2.CookieAcceptPolicy.NO_THIRD_PARTY)
-            print('Cookie accept policy not set. Use fallback value\r')
+            self.cookie_manager.set_accept_policy(WebKit.CookieAcceptPolicy.NO_THIRD_PARTY)
             config['Browser']['cookies'] = 'NO_THIRD_PARTY'
             with open(conf_file, 'w') as configfile:
                     config.write(configfile)
@@ -330,12 +325,11 @@ class Browser(Gtk.Window):
         # Persistent Cookie storage
         try:
             if config['Browser']['persistent-cookies'] == 'True':
-                storage = WebKit2.CookiePersistentStorage.TEXT
+                storage = WebKit.CookiePersistentStorage.TEXT
                 try:
                     self.cookie_manager.set_persistent_storage(str(Path(
                         config['Browser']['cookiepath']).expanduser()), storage)
                 except KeyError:
-                    print('Cookie file not set. Use default value.\r')
                     self.cookie_manager.set_persistent_storage('/tmp/mybrowse-cookies.txt', storage)
                     config['Browser']['cookiepath'] = '/tmp/mybrowse-cookies.txt'
                     with open(conf_file, 'w') as configfile:
@@ -359,7 +353,6 @@ class Browser(Gtk.Window):
                 self.view.load_uri(links(url))
             except TypeError:
                 pass
-        self.configuration()
 
     def change_title(self, widget, data, *arg):
         title = widget.get_title()
@@ -427,8 +420,8 @@ class Browser(Gtk.Window):
     def search_page(self, *args):
         keyword = args[0]
         if not keyword == "":
-            self.findcontroller.search(keyword, WebKit2.FindOptions.CASE_INSENSITIVE,
-                    WebKit2.FindOptions.WRAP_AROUND)
+            self.findcontroller.search(keyword, WebKit.FindOptions.CASE_INSENSITIVE,
+                    WebKit.FindOptions.WRAP_AROUND)
 
     def mousebindings(self, widget, event):
         if event.get_state() & Gdk.ModifierType.CONTROL_MASK:
@@ -438,64 +431,69 @@ class Browser(Gtk.Window):
             elif scrolldir < 0:
                 self.view.set_zoom_level(self.view.get_zoom_level() + 0.1)
 
-    def keybinding(self, widget, event):
-        if (event.keyval == Gdk.keyval_from_name('d') and
-            event.get_state() & Gdk.ModifierType.CONTROL_MASK):
+    def keybinding(self, eventcontroller, keyval, keycode, state):
+        if (keyval == Gdk.keyval_from_name('d') and
+            state & Gdk.ModifierType.CONTROL_MASK):
                 self.set_bookmark(self.view)
-        if (event.keyval == Gdk.keyval_from_name('r') and
-            event.get_state() & Gdk.ModifierType.CONTROL_MASK):
+        if (keyval == Gdk.keyval_from_name('r') and
+            state & Gdk.ModifierType.CONTROL_MASK):
                 self.view.reload()
-        if event.keyval == Gdk.KEY_F5:
+        if keyval == Gdk.KEY_F5:
                 self.view.reload()
-        if (event.keyval == Gdk.KEY_F5 and
-            event.get_state() & Gdk.ModifierType.SHIFT_MASK):
+        if (keyval == Gdk.KEY_F5 and
+            state & Gdk.ModifierType.SHIFT_MASK):
                 self.view.reload_bypass_cache()
-        if (event.keyval == Gdk.keyval_from_name('z') and
-            event.get_state() & Gdk.ModifierType.CONTROL_MASK):
+        if (keyval == Gdk.keyval_from_name('z') and
+            state & Gdk.ModifierType.CONTROL_MASK):
                 self.view.go_back()
-        if (event.keyval == Gdk.keyval_from_name('y') and
-            event.get_state() & Gdk.ModifierType.CONTROL_MASK):
+        if (keyval == Gdk.keyval_from_name('y') and
+            state & Gdk.ModifierType.CONTROL_MASK):
                 self.view.go_forward()
-        if (event.keyval == Gdk.keyval_from_name('0') and
-            event.get_state() & Gdk.ModifierType.CONTROL_MASK):
+        if (keyval == Gdk.keyval_from_name('0') and
+            state & Gdk.ModifierType.CONTROL_MASK):
                 self.view.set_zoom_level(1)
-        if (event.keyval == Gdk.unicode_to_keyval(ord('+')) and
-            event.get_state() & Gdk.ModifierType.CONTROL_MASK):
+        if (keyval == Gdk.unicode_to_keyval(ord('+')) and
+            state & Gdk.ModifierType.CONTROL_MASK):
                 self.view.set_zoom_level(self.view.get_zoom_level() + 0.1)
-        if (event.keyval == Gdk.unicode_to_keyval(ord('-')) and
-            event.get_state() & Gdk.ModifierType.CONTROL_MASK):
+        if (keyval == Gdk.unicode_to_keyval(ord('-')) and
+            state & Gdk.ModifierType.CONTROL_MASK):
                 self.view.set_zoom_level(self.view.get_zoom_level() - 0.1)
-        if (event.keyval == Gdk.keyval_from_name('q') and
-            event.get_state() & Gdk.ModifierType.CONTROL_MASK):
-                Gtk.main_quit()
-        if (event.keyval == Gdk.keyval_from_name('l') and
-            event.get_state() & Gdk.ModifierType.CONTROL_MASK):
+        if (keyval == Gdk.keyval_from_name('q') and
+            state & Gdk.ModifierType.CONTROL_MASK):
+                self.close()
+        if (keyval == Gdk.keyval_from_name('l') and
+            state & Gdk.ModifierType.CONTROL_MASK):
                self.addressbar.grab_focus()
-        if (event.keyval == Gdk.KEY_Escape and
+        if (keyval == Gdk.KEY_Escape and
             self.addressbar.get_text().startswith(':/')):
                 self.findcontroller.search_finish()
-        if (event.keyval == Gdk.KEY_Escape and
+        if (keyval == Gdk.KEY_Escape and
             (self.addressbar.get_text() is not self.view.get_uri()
             or self.addressbar.get_text().startswith(':/'))):
             self.addressbar.set_text(self.view.get_uri())
-        if (event.keyval == Gdk.KEY_Escape and
+        if (keyval == Gdk.KEY_Escape and
             self.addressbar.get_text() == self.view.get_uri()):
                self.addressbar.grab_focus()
-        if (event.keyval == Gdk.keyval_from_name('f') and
-            event.get_state() & Gdk.ModifierType.CONTROL_MASK):
+        if (keyval == Gdk.keyval_from_name('f') and
+            state & Gdk.ModifierType.CONTROL_MASK):
             self.addressbar.grab_focus()
             self.addressbar.set_text(':/')
             self.addressbar.set_position(-1)
-        if (event.keyval == Gdk.keyval_from_name('k') and
-            event.get_state() & Gdk.ModifierType.CONTROL_MASK):
+        if (keyval == Gdk.keyval_from_name('k') and
+            state & Gdk.ModifierType.CONTROL_MASK):
             self.searchbar.grab_focus()
 
-if __name__ == "__main__":
-    browser = Browser()
+def on_activate(app):
+    win = Browser(application=app)
+    win.configuration()
     try:
-        browser.set_default_size(float(config['Browser']['width']), float(config['Browser']['height']))
+        win.set_default_size(float(config['Browser']['width']),
+                             float(config['Browser']['height']))
     except KeyError:
-        browser.maximize()
-    browser.connect("delete-event", Gtk.main_quit)
-    browser.show_all()
-    Gtk.main()
+        win.maximize()
+    win.present()
+
+if __name__ == "__main__":
+    app = Gtk.Application()
+    app.connect('activate', on_activate)
+    app.run(None)
