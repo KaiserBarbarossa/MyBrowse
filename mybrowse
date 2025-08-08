@@ -51,7 +51,8 @@ else:
 
 dir_tuple = [(f"{basedir}/.config/mybrowse", "configuration directory"),
 (f"{basedir}/.local/share/mybrowse/themes", "theme directory"),
-(f"{basedir}/.local/share/mybrowse/extensions", "extension directory")]
+(f"{basedir}/.local/share/mybrowse/extensions", "extension directory"),
+(f"{basedir}/.local/share/mybrowse/userscripts", "JavaScript directory")]
 
 for (directory, description) in dir_tuple:
     if not Path(directory).is_dir():
@@ -78,6 +79,7 @@ config.read(['/etc/mybrowse/mybrowse.cfg', conf_file])
 searchengine = config['General']['search']
 startpage = config['General']['home']
 
+userscript_dir = f"{basedir}/.local/share/mybrowse/userscripts/"
 extension_dir = f"{basedir}/.local/share/mybrowse/extensions/"
 theme_dir = f"{basedir}/.local/share/mybrowse/themes/"
 conf_dir = f"{basedir}/.config/mybrowse/"
@@ -409,6 +411,12 @@ class Browser(Gtk.ApplicationWindow):
             else:
                 self.addressbar.set_text(widget.get_uri())
 
+    def run_userscripts(self):
+        for userscript in Path(userscript_dir).iterdir():
+            if userscript.is_file() and Path(userscript).suffix == '.js':
+                script_content = open(userscript, 'r').read()
+                self.view.evaluate_javascript(script_content, -1)
+
     def progressbar(self, widget, data, *arg):
         amount = widget.get_estimated_load_progress()
         if not amount == 1:
@@ -416,6 +424,7 @@ class Browser(Gtk.ApplicationWindow):
         else:
             self.addressbar.set_progress_fraction(0)
             self.view.grab_focus()
+            self.run_userscripts()
 
     def search_page(self, *args):
         keyword = args[0]
