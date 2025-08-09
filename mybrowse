@@ -240,7 +240,7 @@ class Browser(Gtk.ApplicationWindow):
         current_page = self.tabbar.get_current_page()
 
         self.tabs = []
-        self.tabs.append((self.create_tab(), Gtk.Label.new('Neuer Tab')))
+        self.tabs.append((self.create_tab(), Gtk.Label.new('MyBrowse')))
         self.tabbar.insert_page(self.tabs[0][0], self.tabs[0][1], 0)
 
         self.tabbar.connect("switch-page", self.change_title)
@@ -401,10 +401,15 @@ class Browser(Gtk.ApplicationWindow):
 
     def change_title(self, widget, data, *arg):
         title = self.tabs[current_page][0].view.get_title()
+        current = self.tabbar.get_current_page()
         if title == '':
                 self.set_title('MyBrowse')
+                self.tabbar.set_tab_label_text(
+                        self.tabbar.get_nth_page(current), 'MyBrowse')
         else:
                 self.set_title(f'{title} - MyBrowse')
+                self.tabbar.set_tab_label_text(
+                        self.tabbar.get_nth_page(current), title)
 
     def change_uri(self, widget, data, *arg):
         uri = widget.get_uri()
