@@ -372,7 +372,7 @@ class Browser(Gtk.ApplicationWindow):
     def close_tab(self, widget):
         if self.tabbar.get_n_pages() != 1:
             current = self.tabbar.get_current_page()
-            self.tabbar.remove(self.tabs.pop(current)[0])
+            self.tabbar.remove_page(self.tabs.pop(current)[0])
 
     def new_tab(self, widget):
         current = self.tabbar.get_current_page()
