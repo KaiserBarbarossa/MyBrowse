@@ -167,7 +167,7 @@ if len(args.url) > 0:
 else:
         starturl = startpage
 
-class Tab(Gtk.VBox):
+class Tab(Gtk.Box):
     def __init__(self, *args, **kwargs):
         super(Tab, self).__init__(*args, **kwargs)
         
@@ -234,13 +234,13 @@ class Browser(Gtk.ApplicationWindow):
 
         self.tabbar = Gtk.Notebook()
         self.tabbar.set_scrollable(True)
-        self.vbox.add(self.tabbar)
+        self.vbox.append(self.tabbar)
 
         global current_page
         current_page = self.tabbar.get_current_page()
 
         self.tabs = []
-        self.tabs.append((self.create_tab(), Gtk.Label('Neuer Tab')))
+        self.tabs.append((self.create_tab(), Gtk.Label.new('Neuer Tab')))
         self.tabbar.insert_page(self.tabs[0][0], self.tabs[0][1], 0)
 
         self.tabbar.connect("switch-page", self.change_title)
@@ -261,7 +261,7 @@ class Browser(Gtk.ApplicationWindow):
         self.findcontroller = WebKit.FindController(web_view=self.tabs[current_page][0].view)
 
         self.sw = Gtk.ScrolledWindow()
-        self.sw.set_child(self.tabs.[current_page][0].view)
+        self.sw.set_child(self.tabs[current_page][0].view)
         self.sw.set_vexpand(True)
 
         self.vbox.append(self.sw)
@@ -329,7 +329,7 @@ class Browser(Gtk.ApplicationWindow):
         except KeyError:
             pass
         try:
-            self.tabs[current_page][0].context.set_preferred_languages(config['General']['language'])
+            self.context.set_preferred_languages(config['General']['language'])
         except KeyError:
             pass
 
@@ -376,7 +376,7 @@ class Browser(Gtk.ApplicationWindow):
 
     def new_tab(self, widget):
         current = self.tabbar.get_current_page()
-        page_tuple = (self.create_tab(), Gtk.Label(''))
+        page_tuple = (self.create_tab(), Gtk.Label.new(''))
         self.tabs.insert(current_page + 1, page_tuple)
         self.tabbar.insert_page(page_tuple[0], page_tuple[1], current + 1)
         self.tabbar.set_current_page(current + 1)
